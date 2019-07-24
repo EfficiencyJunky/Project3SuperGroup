@@ -9,7 +9,8 @@
 | Date | Subject |
 |--|--|
 | Sat Jul, 20 | Project Goal & Project Team |
-| Sat Jul, 20 | Project Divisions: Frontend, Backend, Styling, Scrapping...etc. |
+| Sat Jul, 20 | Project Divisions: Frontend, Backend, Styling, Scrapping...etc. 1) we took the json data (383 lines) matt provided, converted it into a dataframe, and calculated the X and Y values to start the machine learning part. 
+2) Coding with kittens. |
 | Tue Jul, 23 | Project Work |
 | Thu Jul, 25 | Project Work |
 | Sat Jul, 27 | Project Work, Project Presentation Prep, & Mock Presentations |
@@ -31,5 +32,5 @@ We intend to use the data from [511.org](http://511.org/)
      
     
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA0OTczMjAwXX0=
+eyJoaXN0b3J5IjpbLTE4ODA3NDAzNTddfQ==
 -->
