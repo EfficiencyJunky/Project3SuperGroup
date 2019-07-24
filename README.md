@@ -29,7 +29,8 @@ We intend to use the historical planned vs actual arrival times to examine the l
 ### Possible source for such data:  
 We intend to use the data from [511.org](http://511.org/)
      
-    
+## Team Member Tasks
+![Team Dynamix Figure](https://github.com/EfficiencyJunky/Project3SuperGroup/blob/master/documentation/Team_Dynamix.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA5MzQ1OTExM119
+eyJoaXN0b3J5IjpbLTc3ODMxNjMxNiwxMDkzNDU5MTEzXX0=
 -->
