@@ -13,13 +13,12 @@
 
 
 ## Logo:
-      
-    http://static1.squarespace.com/static/5913cd88197aeab3e24218d7/5a6d0b4241920260cc97d00d/5d03edb17460cd00011d8d8b/1561741688156/Shame.png?format=1500w
+    ![Shame](http://static1.squarespace.com/static/5913cd88197aeab3e24218d7/5a6d0b4241920260cc97d00d/5d03edb17460cd00011d8d8b/1561741688156/Shame.png?format=1500w)
 
     
   
      
     
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1MTg3NDA5MDVdfQ==
+eyJoaXN0b3J5IjpbODAzNDY3NzM5XX0=
 -->
