@@ -1,7 +1,4 @@
-# Project3SuperGroup
-
-
-Project Title:     Muni Shaming
+# Project Title:     Muni Shaming
 ## Team Members: 
 ### Hilary, Matt, Turner, Laura
 ## Timeline:
@@ -14,13 +11,15 @@ Project Title:     Muni Shaming
 | Sat Jul, 27 | Project Work, Project Presentation Prep, & Mock Presentations |
 | Thu Aug, 1 | Project Presentation |
 
+
+## Logo:
       
-    
+    http://static1.squarespace.com/static/5913cd88197aeab3e24218d7/5a6d0b4241920260cc97d00d/5d03edb17460cd00011d8d8b/1561741688156/Shame.png?format=1500w
 
     
   
      
     
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMwNDE2ODAzMl19
+eyJoaXN0b3J5IjpbLTE1MTg3NDA5MDVdfQ==
 -->
