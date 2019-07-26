@@ -13,17 +13,17 @@ let selectedRoutesListColors = ["red", "blue", "yellow", "pink", "purple", "gree
 
 let earthquakes = {};
 let significantEarthquakes = {};
-let tectonicPlates = L.geoJson(tectonicPlatesGeoJSON, 
-                                { 
-                                  pane: 'tectonicPlatesPane',
-                                  onEachFeature: (function (feature, layer) {
-                                    layer.bindPopup(
-                                      "<h3>" + feature.properties.PlateName + " Plate</h3>"
-                                    );
-                                  }),
-                                  style: { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' }
-                                }
-                              );
+// let tectonicPlates = L.geoJson(tectonicPlatesGeoJSON, 
+//                                 { 
+//                                   pane: 'tectonicPlatesPane',
+//                                   onEachFeature: (function (feature, layer) {
+//                                     layer.bindPopup(
+//                                       "<h3>" + feature.properties.PlateName + " Plate</h3>"
+//                                     );
+//                                   }),
+//                                   style: { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' }
+//                                 }
+//                               );
 
 
 // let muniRoutesGeoJSONSelected = { 
@@ -69,21 +69,33 @@ let muniRoutes = L.geoJson(muniRoutesGeoJSON,
                                   //     "<h3>" + feature.properties.name + " Muni Line</h3>"
                                   //   );
                                   // }),
-                                  style: [
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'blue' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'green' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'pink' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'purple' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'yellow' },
-                                    { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'black' }
-                                         ]
+                                  style:  (function (feature) {
+                                    let name = feature.properties.name;
+                                    let color = selectedRoutes[name]["color"];
+                                    return { fillOpacity: 0.0, weight: 2, opacity: 1, color: color };
+
+
+                                    // if( selectedRoutesList.includes(feature.properties.name) ){
+                                    //   layer.bindPopup(
+                                    //     "<h3>" + feature.properties.name + " Muni Line</h3>"
+                                    //   );
+                                    // }
+                                  }),      
+                                  // [
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'blue' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'green' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'pink' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'purple' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'yellow' },
+                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'black' }
+                                  //        ]
                                 }
                               );
 
 
 let numEarthquakeMaps = 2;
-var myAsyncCounter = new asyncCounter(numEarthquakeMaps, createMap);
+// var myAsyncCounter = new asyncCounter(numEarthquakeMaps, createMap);
 
 
 
@@ -106,36 +118,36 @@ function getColorSignificant(d) {
 // Store our API endpoint inside queryUrl
 // var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 // var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1989-10-15&endtime=1989-10-20";//&minmagnitude=2.5&minlatitude=20.0&maxlatitude=50.0&minlongitude=220.0&maxlongitude=300.0";
-var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();// + "&endtime=" + today;//&minmagnitude=2.5&minlatitude=20.0&maxlatitude=50.0&minlongitude=220.0&maxlongitude=300.0";
+// var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();// + "&endtime=" + today;//&minmagnitude=2.5&minlatitude=20.0&maxlatitude=50.0&minlongitude=220.0&maxlongitude=300.0";
+
+// // Perform a GET request to the query URL
+// d3.json(normalEarthquakesQueryUrl, function(data) {
+//   // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
+//   earthquakes = createFeatures(data.features, getColorNormal, 'normalEarthquakesPane');
+  
+//   myAsyncCounter.increment();
+
+//   console.log("earthquakes created");
+  
+//   // Sending our earthquakes layer to the createMap function
+//   // createMap(earthquakes, tectonicPlates);
+// });
+
 
 // Perform a GET request to the query URL
-d3.json(normalEarthquakesQueryUrl, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
-  earthquakes = createFeatures(data.features, getColorNormal, 'normalEarthquakesPane');
+// var significantEarthquakesQueryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
+
+// d3.json(significantEarthquakesQueryURL, function(data) {
+//   // Once we get a response, send the data.features object to the createFeatures function
+//   significantEarthquakes = createFeatures(data.features, getColorSignificant, 'significantEarthquakesPane');
   
-  myAsyncCounter.increment();
+//   myAsyncCounter.increment();
 
-  console.log("earthquakes created");
-  
-  // Sending our earthquakes layer to the createMap function
-  // createMap(earthquakes, tectonicPlates);
-});
+//   console.log("significant earthquakes created");
 
-
-// Perform a GET request to the query URL
-var significantEarthquakesQueryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
-
-d3.json(significantEarthquakesQueryURL, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function
-  significantEarthquakes = createFeatures(data.features, getColorSignificant, 'significantEarthquakesPane');
-  
-  myAsyncCounter.increment();
-
-  console.log("significant earthquakes created");
-
-  // Sending our earthquakes layer to the createMap function
-  // createMap(earthquakes, tectonicPlates);
-});
+//   // Sending our earthquakes layer to the createMap function
+//   // createMap(earthquakes, tectonicPlates);
+// });
 
 
 
@@ -233,36 +245,37 @@ function createMap() {
 
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes,
-    Significant: significantEarthquakes,
-    TectonicPlates: tectonicPlates,
+    // Earthquakes: earthquakes,
+    // Significant: significantEarthquakes,
+    // TectonicPlates: tectonicPlates,
     MuniRoutes: muniRoutes
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display on load
   var myMap = L.map("map", {
     center: [
-      37.09, -95.71
+      37.75, -122.45
     ],
-    zoom: 5,
+    zoom: 12,
     // layers: [streetmap, earthquakes]
   });
 
   // set up our panes and zIndex ordering so they layer correctly when added and removed using the UI control layer
-  myMap.createPane('normalEarthquakesPane');
-  myMap.getPane('normalEarthquakesPane').style.zIndex = 400;
+  // myMap.createPane('normalEarthquakesPane');
+  // myMap.getPane('normalEarthquakesPane').style.zIndex = 400;
 
-  myMap.createPane('significantEarthquakesPane');
-  myMap.getPane('significantEarthquakesPane').style.zIndex = 401;
+  // myMap.createPane('significantEarthquakesPane');
+  // myMap.getPane('significantEarthquakesPane').style.zIndex = 401;
   
-  myMap.createPane('tectonicPlatesPane');
-  myMap.getPane('tectonicPlatesPane').style.zIndex = 398;
+  // myMap.createPane('tectonicPlatesPane');
+  // myMap.getPane('tectonicPlatesPane').style.zIndex = 398;
 
   myMap.createPane('muniRoutesPane');
   myMap.getPane('muniRoutesPane').style.zIndex = 399;
 
   streetmap.addTo(myMap);
-  earthquakes.addTo(myMap);
+  // earthquakes.addTo(myMap);
+  muniRoutes.addTo(myMap);
 
 
   // Create a layer control
@@ -349,3 +362,8 @@ asyncCounter.prototype.increment = function(){
       this.callback();
   }
 };
+
+
+
+
+createMap();
