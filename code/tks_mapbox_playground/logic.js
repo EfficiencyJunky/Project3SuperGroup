@@ -1,18 +1,25 @@
+let stopCircleRadius = 40;
+let stopCircleColor = "#ff7877";
+
 let selectedRoutes = {
   "2":   {"long_name":"SUTTER/CLEMENT",       "color": "red",       "has_rapid": false,   "has_express": 0,   "has_owl": false},
-  "7":   {"long_name":"HAIGHT-NORIEGA",       "color": "blue",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
+  "7":   {"long_name":"HAIGHT-NORIEGA",       "color": "purple",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
   "14":  {"long_name":"MISSION",              "color": "yellow",    "has_rapid": false,   "has_express": 1,   "has_owl": false},  
   "38":  {"long_name":"GEARY",                "color": "pink",      "has_rapid": true,    "has_express": 2,   "has_owl": false},     
-  "KT":  {"long_name":"INGLESIDE/THIRD",      "color": "purple",    "has_rapid": false,   "has_express": 0,   "has_owl": false},
+  "KT":  {"long_name":"INGLESIDE/THIRD",      "color": "cyan",    "has_rapid": false,   "has_express": 0,   "has_owl": false},
+  "J":   {"long_name":"CHURCH",               "color": "orange",    "has_rapid": false,   "has_express": 0,   "has_owl": false},  
   "M":   {"long_name":"OCEANVIEW",            "color": "green",     "has_rapid": false,   "has_express": 0,   "has_owl": true},
-  "N":   {"long_name":"JUDAH",                "color": "orange",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
+  "N":   {"long_name":"JUDAH",                "color": "blue",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
 };
 
-let selectedRoutesList = ["2", "7", "14", "38", "KT", "M", "N"];
-let selectedRoutesListColors = ["red", "blue", "yellow", "pink", "purple", "green", "orange"];
+// let selectedRoutesList = ["2", "7", "14", "38", "KT", "M", "N"];
+const selectedRoutesList = Object.keys(selectedRoutes);
+console.log("keys list", selectedRoutesList);
 
-let earthquakes = {};
-let significantEarthquakes = {};
+// let selectedRoutesListColors = ["red", "blue", "yellow", "pink", "purple", "green", "orange"];
+
+// let earthquakes = {};
+// let significantEarthquakes = {};
 // let tectonicPlates = L.geoJson(tectonicPlatesGeoJSON, 
 //                                 { 
 //                                   pane: 'tectonicPlatesPane',
@@ -34,6 +41,7 @@ let significantEarthquakes = {};
 //     }
 //   })
 // }
+
 
 muniRoutesGeoJSONFeaturesFiltered = muniRoutesGeoJSON.features.filter((feature) => {
   return selectedRoutesList.includes(feature.properties.name);
@@ -134,44 +142,105 @@ function getColorSignificant(d) {
 // });
 
 
-// Perform a GET request to the query URL
-// var significantEarthquakesQueryURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
+// **************** FUNCTION TO CREATE THE FEATURES FOR EACH API CALL ******************
+// function createFeatures(earthquakeData, getColor, paneName) {
 
-// d3.json(significantEarthquakesQueryURL, function(data) {
-//   // Once we get a response, send the data.features object to the createFeatures function
-//   significantEarthquakes = createFeatures(data.features, getColorSignificant, 'significantEarthquakesPane');
-  
-//   myAsyncCounter.increment();
+//   // Define a function we want to run once for each feature in the features array
+//   // Give each feature a popup describing the place and time of the earthquake
+//   function onEachFeature(feature, layer) {
+//     layer.bindPopup(
+//       "<h3>" + feature.properties.place + "</h3>" +
+//       "<hr>" +
+//       "<p>" + new Date(feature.properties.time) + //"</p>" +
+//       "<br>" +
+//       // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
+//       "<b>" + "Magnitude: " + "</b>" + feature.properties.mag + "</p>"
+//     );
+//   }
 
-//   console.log("significant earthquakes created");
+//   function createMarkers(feature, latlng) {
 
-//   // Sending our earthquakes layer to the createMap function
-//   // createMap(earthquakes, tectonicPlates);
-// });
+//     let radius = feature.properties.mag * 3;
+//     //let color = "#ff7877";
+//     let color = getColor(feature.properties.mag);
+
+//     let geojsonMarkerOptions = {
+//       // these properties deligate the fill color and opacity
+//       pane: paneName,
+//       fillOpacity: 0.8,
+//       fillColor: color,
+//       // this properties sets the radius size DUH!
+//       radius: radius,
+//       // these properties create the black outline
+//       color: "#000",
+//       weight: 1,
+//       opacity: 1
+//     };
+
+//     return L.circleMarker(latlng, geojsonMarkerOptions);
+//   }
 
 
+//   // Create a GeoJSON layer containing the features array on the earthquakeData object
+//   // Run the onEachFeature function once for each piece of data in the array
+//   let earthquakes = L.geoJSON(earthquakeData, {
+//     onEachFeature: onEachFeature,
+//     pointToLayer: createMarkers
+//   });
+
+//   return earthquakes;
+
+// }
+
+// function getJsonMarkerOptions(radius){
+
+//   let geojsonMarkerOptions = {
+//       // these properties deligate the fill color and opacity
+//       pane: paneName,
+//       fillOpacity: 0.8,
+//       fillColor: color,
+//       // this properties sets the radius size DUH!
+//       radius: radius,
+//       // these properties create the black outline
+//       color: "#000",
+//       weight: 1,
+//       opacity: 1
+//     };
+
+//   }
 
 // **************** FUNCTION TO CREATE THE FEATURES FOR EACH API CALL ******************
-function createFeatures(earthquakeData, getColor, paneName) {
+//function createFeatures(earthquakeData, getColor, paneName) {
+function createFeatures(munistopData, paneName) {  
 
+  // console.log("creating features", munistopData[0].properties.stopId);
   // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
   function onEachFeature(feature, layer) {
     layer.bindPopup(
-      "<h3>" + feature.properties.place + "</h3>" +
+      "<h3>" + "Stop ID: " + feature.properties.stopId + "</h3>" +
       "<hr>" +
-      "<p>" + new Date(feature.properties.time) + //"</p>" +
+      // "<p>" + new Date(feature.properties.time) + //"</p>" +
       "<br>" +
       // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
-      "<b>" + "Magnitude: " + "</b>" + feature.properties.mag + "</p>"
+      "<b>" + "Route: " + "</b>" + feature.properties.Route + "</p>"
     );
   }
 
+  // abracadabra
   function createMarkers(feature, latlng) {
 
-    let radius = feature.properties.mag * 3;
-    //let color = "#ff7877";
-    let color = getColor(feature.properties.mag);
+    // console.log("info: ", feature.stopId);
+    // let radius = feature.properties.mag * 3;
+    let radius = stopCircleRadius;
+    let color = stopCircleColor;
+
+    if( selectedRoutesList.includes(feature.properties.Route) ){
+      let name = feature.properties.Route;
+      color = selectedRoutes[name]["color"];      
+    }
+
+    //let color = getColor(feature.properties.mag);
 
     let geojsonMarkerOptions = {
       // these properties deligate the fill color and opacity
@@ -182,24 +251,25 @@ function createFeatures(earthquakeData, getColor, paneName) {
       radius: radius,
       // these properties create the black outline
       color: "#000",
-      weight: 1,
+      weight: 0.5,
       opacity: 1
     };
 
-    return L.circleMarker(latlng, geojsonMarkerOptions);
+    return L.circle(latlng, geojsonMarkerOptions);
   }
 
 
   // Create a GeoJSON layer containing the features array on the earthquakeData object
   // Run the onEachFeature function once for each piece of data in the array
-  let earthquakes = L.geoJSON(earthquakeData, {
+  let muniStops = L.geoJSON(munistopData, {
     onEachFeature: onEachFeature,
     pointToLayer: createMarkers
   });
 
-  return earthquakes;
+  return muniStops;
 
 }
+
 
 
 // **************** FUNCTION TO CREATE THE FINAL MAP LAYERS ******************
@@ -243,11 +313,16 @@ function createMap() {
     "Dark Map": darkmap
   };
 
+  // console.log("creating features", muniStopsGeoJSON.features);
+
+  let muniStops = createFeatures(muniStopsGeoJSON.features, 'muniStopsPane');
+
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
     // Earthquakes: earthquakes,
     // Significant: significantEarthquakes,
     // TectonicPlates: tectonicPlates,
+    MuniStops: muniStops,
     MuniRoutes: muniRoutes
   };
 
@@ -270,8 +345,12 @@ function createMap() {
   // myMap.createPane('tectonicPlatesPane');
   // myMap.getPane('tectonicPlatesPane').style.zIndex = 398;
 
+  myMap.createPane('muniStopsPane');
+  myMap.getPane('muniStopsPane').style.zIndex = 400;
+
   myMap.createPane('muniRoutesPane');
   myMap.getPane('muniRoutesPane').style.zIndex = 399;
+
 
   streetmap.addTo(myMap);
   // earthquakes.addTo(myMap);
@@ -294,7 +373,7 @@ function createMap() {
           grades = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0],
           labels = [];
   
-      div.innerHTML += '<b>Magnitude</b><br>';
+      div.innerHTML += '<b>SHAME SCORE</b><br>';
 
       // loop through our density intervals and generate a label with a colored square for each interval
       for (let i = 0; i < grades.length; i++) {
@@ -312,7 +391,26 @@ function createMap() {
   
   legend.addTo(myMap);
 
+  // map.on('zoomend', function() {
+  //   var currentZoom = map.getZoom();
 
+  //   if (currentZoom > 15) {
+  //       muniStops.eachLayer(function(layer) {
+  //         layer.set
+  //         return layer.setIcon(ar_icon_2);
+  //       });
+  //   } 
+  //   // else {
+  //   //     muniStops.eachLayer(function(layer) {
+  //   //         if (layer.feature.properties.num < 0.5)
+  //   //             return layer.setIcon(ar_icon_1_double_size);
+  //   //         else if (feature.properties.num < 1.0)
+  //   //             return layer.setIcon(ar_icon_2_double_size);
+  //   //     });
+  //   // }
+  // }  
+
+  
 
 }
 
@@ -323,45 +421,45 @@ function createMap() {
 // **************** HELPER FUNCTIONS ******************
 
 // **************** GET THE DATE 7 DAYS AGO ******************
-function getDateOneWeekAgo(){
-  let todaysDate = new Date();
-  let dd = String(todaysDate.getDate()).padStart(2, '0');
-  let mm = String(todaysDate.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let yyyy = todaysDate.getFullYear();
+// function getDateOneWeekAgo(){
+//   let todaysDate = new Date();
+//   let dd = String(todaysDate.getDate()).padStart(2, '0');
+//   let mm = String(todaysDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+//   let yyyy = todaysDate.getFullYear();
   
-  let today = yyyy + '-' + mm + '-' + dd;
-  // console.log("date:", today);
+//   let today = yyyy + '-' + mm + '-' + dd;
+//   // console.log("date:", today);
   
-  let sevenDaysAgoDate = new Date();
-  sevenDaysAgoDate.setDate(todaysDate.getDate() - 7);
-  let dd2 = String(sevenDaysAgoDate.getDate()).padStart(2, '0');
-  let mm2 = String(sevenDaysAgoDate.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let yyyy2 = sevenDaysAgoDate.getFullYear();
+//   let sevenDaysAgoDate = new Date();
+//   sevenDaysAgoDate.setDate(todaysDate.getDate() - 7);
+//   let dd2 = String(sevenDaysAgoDate.getDate()).padStart(2, '0');
+//   let mm2 = String(sevenDaysAgoDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+//   let yyyy2 = sevenDaysAgoDate.getFullYear();
   
-  let sevenDaysAgoString = yyyy2 + '-' + mm2 + '-' + dd2;
+//   let sevenDaysAgoString = yyyy2 + '-' + mm2 + '-' + dd2;
   
-  console.log("date 7 days:", sevenDaysAgoString);
+//   console.log("date 7 days:", sevenDaysAgoString);
 
-  return sevenDaysAgoString;
-}
+//   return sevenDaysAgoString;
+// }
 
 
-// **************** ASYNCRONOUS COUNTER FUNCTIONS TO CONTROL WHEN WE CALL THE "createMap()" FUNCTION ******************
-// **************** BECAUSE WE ONLY WANT TO CALL THIS FUNCTION AFTER ALL THE API CALLS HAVE COMPLETED *****************
-function asyncCounter(numCalls, callback){
-  this.callback = callback;
-  this.numCalls = numCalls;
-  this.calls = 0;
-};
+// // **************** ASYNCRONOUS COUNTER FUNCTIONS TO CONTROL WHEN WE CALL THE "createMap()" FUNCTION ******************
+// // **************** BECAUSE WE ONLY WANT TO CALL THIS FUNCTION AFTER ALL THE API CALLS HAVE COMPLETED *****************
+// function asyncCounter(numCalls, callback){
+//   this.callback = callback;
+//   this.numCalls = numCalls;
+//   this.calls = 0;
+// };
 
-asyncCounter.prototype.increment = function(){
+// asyncCounter.prototype.increment = function(){
 
-  this.calls += 1;
+//   this.calls += 1;
 
-  if(this.calls === this.numCalls){
-      this.callback();
-  }
-};
+//   if(this.calls === this.numCalls){
+//       this.callback();
+//   }
+// };
 
 
 
