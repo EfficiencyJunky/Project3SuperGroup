@@ -1,7 +1,27 @@
-let stopCircleRadius = 40;
-let stopCircleColor = "#ff7877";
+/* ###################################################################
+   ****  ALL OF OUR GLOBAL VARIABLES
+###################################################################### */
 
-let selectedRoutes = {
+// ************************  API CALL FUNCTIONS TO DOWNLOAD ALL THE SHAME SCORE DATA ************************  
+// Store our API endpoint inside queryUrl
+let queryUrl = "https://muni-db-service.herokuapp.com/scores";
+let APICallResponse = {};
+APICallResponse = shameScoreAPIResponse.results;
+console.log(APICallResponse);
+
+// now we create an asyncronous counter that only calls the "createMap" function
+// once the counter has been incremented enough times to equal the "numAPICalls" integer
+// currently we are only doing this once so it's sort of not really useful
+// but if we wanted to execute another API call we could update it
+let numAPICalls = 1;
+let myAsyncCounter = new asyncCounter(numAPICalls, createMap);
+
+// muni stop circle default parameters
+let muniStopCircleRadius = 20;
+let muniStopCircleColor = "#ff7877";
+
+// DEFINE WHICH LINES WE WANT TO ADD TO THE MAP AND SOME METADATA FOR EACH OF THEM
+let selectedMUNILines = {
   "2":   {"long_name":"SUTTER/CLEMENT",       "color": "red",       "has_rapid": false,   "has_express": 0,   "has_owl": false},
   "7":   {"long_name":"HAIGHT-NORIEGA",       "color": "purple",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
   "14":  {"long_name":"MISSION",              "color": "yellow",    "has_rapid": false,   "has_express": 1,   "has_owl": false},  
@@ -12,102 +32,45 @@ let selectedRoutes = {
   "N":   {"long_name":"JUDAH",                "color": "blue",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
 };
 
-// let selectedRoutesList = ["2", "7", "14", "38", "KT", "M", "N"];
-const selectedRoutesList = Object.keys(selectedRoutes);
-console.log("keys list", selectedRoutesList);
-
-// let selectedRoutesListColors = ["red", "blue", "yellow", "pink", "purple", "green", "orange"];
-
-// let earthquakes = {};
-// let significantEarthquakes = {};
-// let tectonicPlates = L.geoJson(tectonicPlatesGeoJSON, 
-//                                 { 
-//                                   pane: 'tectonicPlatesPane',
-//                                   onEachFeature: (function (feature, layer) {
-//                                     layer.bindPopup(
-//                                       "<h3>" + feature.properties.PlateName + " Plate</h3>"
-//                                     );
-//                                   }),
-//                                   style: { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' }
-//                                 }
-//                               );
+// CREATE A LIST OF JUST THE MUNI LINE NUMBERS FROM THE KEYS OF THE 'selectedMUNILines' OBJECT ABOVE
+const selectedMUNILineNamesList = Object.keys(selectedMUNILines);
 
 
-// let muniRoutesGeoJSONSelected = { 
-//   "features": muniRoutesGeoJSON.features.map((feature) => {
-//     if( selectedRoutesList.includes(feature.properties.name) ){
-//       console.log("feature " + ": " + feature.properties.name);
-//       return feature;
-//     }
-//   })
-// }
 
+// the GeoJSON object only has 3 key value pairs at the top level. it's structure looks like this
+// you can fiew the full object here: https://transit.land/api/v1/routes.geojson?operated_by=o-9q8y-sfmta&per_page=false
+/*
+    {
+      "features": [],
+      "meta": {
+        "sort_key": "id",
+        "sort_order": "asc",
+        "per_page": "false"
+      },
+      "type": "FeatureCollection"
+    }
+*/
 
-muniRoutesGeoJSONFeaturesFiltered = muniRoutesGeoJSON.features.filter((feature) => {
-  return selectedRoutesList.includes(feature.properties.name);
+// we need to create a version of the muniLinesGeoJSON object that only contains the 
+// MUNI lines we care about as defined in the 'selectedMUNILines' object above
+// but we only want to replace the value of the "features" key and keep the other two keys values in tact
+let muniLinesGeoJSONFiltered = {};
+
+muniLinesGeoJSONFiltered.features = muniLinesGeoJSON.features.filter((feature) => {
+  return selectedMUNILineNamesList.includes(feature.properties.name);
 });
+muniLinesGeoJSONFiltered.meta = muniLinesGeoJSON.meta;
+muniLinesGeoJSONFiltered.type = muniLinesGeoJSON.type;
 
 
-muniRoutesGeoJSONFiltered = muniRoutesGeoJSON;
-muniRoutesGeoJSONFiltered.features = muniRoutesGeoJSONFeaturesFiltered;
+let showSignificantColor = false;
 
 
-console.log(muniRoutesGeoJSON);
-console.log(muniRoutesGeoJSONFiltered);
+/* ###################################################################
+   ****  HELPER FUNCTIONS
+###################################################################### */
 
-
-
-// muniRoutesGeoJSONSelected.features.map((feature, i) => {
-//   console.log("feature " + i + ": " + feature.properties.name);
-// });
-
-
-let muniRoutes = L.geoJson(muniRoutesGeoJSON, 
-                                { 
-                                  pane: 'muniRoutesPane',
-                                  onEachFeature: (function (feature, layer) {
-                                    if( selectedRoutesList.includes(feature.properties.name) ){
-                                      layer.bindPopup(
-                                        "<h3>" + feature.properties.name + " Muni Line</h3>"
-                                      );
-                                    }
-                                  }),                                  
-                                  // onEachFeature: (function (feature, layer) {
-                                  //   layer.bindPopup(
-                                  //     "<h3>" + feature.properties.name + " Muni Line</h3>"
-                                  //   );
-                                  // }),
-                                  style:  (function (feature) {
-                                    let name = feature.properties.name;
-                                    let color = selectedRoutes[name]["color"];
-                                    return { fillOpacity: 0.0, weight: 2, opacity: 1, color: color };
-
-
-                                    // if( selectedRoutesList.includes(feature.properties.name) ){
-                                    //   layer.bindPopup(
-                                    //     "<h3>" + feature.properties.name + " Muni Line</h3>"
-                                    //   );
-                                    // }
-                                  }),      
-                                  // [
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'blue' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'orange' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'green' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'pink' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'purple' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'yellow' },
-                                  //   { fillOpacity: 0.0, weight: 2, opacity: 1, color: 'black' }
-                                  //        ]
-                                }
-                              );
-
-
-let numEarthquakeMaps = 2;
-// var myAsyncCounter = new asyncCounter(numEarthquakeMaps, createMap);
-
-
-
-// **************** FUNCTIONS TO GET COLORS FOR CIRCLES BASED ON MAGNITUDE AND LEGEND ******************
+// **************** FUNCTIONS TO GET COLORS FOR CIRCLES BASED ON SHAME SCORE AND LEGEND ******************
 function getColorNormal(d) {
   return d > 5.0  ? '#FF0000' :
          d > 4.0  ? '#ff6600' :
@@ -122,131 +85,139 @@ function getColorSignificant(d) {
   return '#000000';
 }
 
-// ************************  API CALL FUNCTIONS TO CREATE THE EARTHQUAKE LAYERS ************************  
-// Store our API endpoint inside queryUrl
-// var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-// var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1989-10-15&endtime=1989-10-20";//&minmagnitude=2.5&minlatitude=20.0&maxlatitude=50.0&minlongitude=220.0&maxlongitude=300.0";
-// var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();// + "&endtime=" + today;//&minmagnitude=2.5&minlatitude=20.0&maxlatitude=50.0&minlongitude=220.0&maxlongitude=300.0";
-
-// // Perform a GET request to the query URL
-// d3.json(normalEarthquakesQueryUrl, function(data) {
-//   // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
-//   earthquakes = createFeatures(data.features, getColorNormal, 'normalEarthquakesPane');
-  
-//   myAsyncCounter.increment();
-
-//   console.log("earthquakes created");
-  
-//   // Sending our earthquakes layer to the createMap function
-//   // createMap(earthquakes, tectonicPlates);
-// });
 
 
-// **************** FUNCTION TO CREATE THE FEATURES FOR EACH API CALL ******************
-// function createFeatures(earthquakeData, getColor, paneName) {
-
-//   // Define a function we want to run once for each feature in the features array
-//   // Give each feature a popup describing the place and time of the earthquake
-//   function onEachFeature(feature, layer) {
-//     layer.bindPopup(
-//       "<h3>" + feature.properties.place + "</h3>" +
-//       "<hr>" +
-//       "<p>" + new Date(feature.properties.time) + //"</p>" +
-//       "<br>" +
-//       // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
-//       "<b>" + "Magnitude: " + "</b>" + feature.properties.mag + "</p>"
-//     );
-//   }
-
-//   function createMarkers(feature, latlng) {
-
-//     let radius = feature.properties.mag * 3;
-//     //let color = "#ff7877";
-//     let color = getColor(feature.properties.mag);
-
-//     let geojsonMarkerOptions = {
-//       // these properties deligate the fill color and opacity
-//       pane: paneName,
-//       fillOpacity: 0.8,
-//       fillColor: color,
-//       // this properties sets the radius size DUH!
-//       radius: radius,
-//       // these properties create the black outline
-//       color: "#000",
-//       weight: 1,
-//       opacity: 1
-//     };
-
-//     return L.circleMarker(latlng, geojsonMarkerOptions);
-//   }
-
-
-//   // Create a GeoJSON layer containing the features array on the earthquakeData object
-//   // Run the onEachFeature function once for each piece of data in the array
-//   let earthquakes = L.geoJSON(earthquakeData, {
-//     onEachFeature: onEachFeature,
-//     pointToLayer: createMarkers
-//   });
-
-//   return earthquakes;
-
-// }
-
-// function getJsonMarkerOptions(radius){
-
-//   let geojsonMarkerOptions = {
-//       // these properties deligate the fill color and opacity
-//       pane: paneName,
-//       fillOpacity: 0.8,
-//       fillColor: color,
-//       // this properties sets the radius size DUH!
-//       radius: radius,
-//       // these properties create the black outline
-//       color: "#000",
-//       weight: 1,
-//       opacity: 1
-//     };
-
-//   }
-
-// **************** FUNCTION TO CREATE THE FEATURES FOR EACH API CALL ******************
-//function createFeatures(earthquakeData, getColor, paneName) {
+/* #################################################################################
+   ****  FUNCTION TO CREATE THE FEATURES (popups and markers) FOR EACH MUNISTOP
+#################################################################################### */
 function createFeatures(munistopData, paneName) {  
+//function createFeatures(earthquakeData, getColor, paneName) {
 
-  // console.log("creating features", munistopData[0].properties.stopId);
+
+// GEOJSON WITH ALL THE STOP LOCATIONS
+/*
+  "features": {
+    "type": string;
+    "geometry": {
+        "type": string;
+        "coordinates": number[];
+    };
+    "properties": {
+        "Route": string;
+        "stopId": number;
+        "title": string;
+    };
+  }[]
+*/
+
+
+// ARRAY OF STOP INFORMATION FROM API CALL
+/*
+{
+  "direction_ref": "Inbound",
+  "lines": [
+    {
+      "line_ref": "38",
+      "scores": {
+          "min_late": -42.5,
+          "prediction_label": "tisk tisk"
+      }
+    },
+    {
+      "line_ref": "7",
+      "scores": {
+          "min_late": 45.705882352941174,
+          "prediction_label": "tisk tisk"
+      }
+    }
+  ],
+  "stop_point_ref": 13089
+}
+*/
+
   // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
+  // Give each feature a popup describing the muni stop and the lines it services
   function onEachFeature(feature, layer) {
-    layer.bindPopup(
-      "<h3>" + "Stop ID: " + feature.properties.stopId + "</h3>" +
-      "<hr>" +
-      // "<p>" + new Date(feature.properties.time) + //"</p>" +
-      "<br>" +
-      // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
-      "<b>" + "Route: " + "</b>" + feature.properties.Route + "</p>"
-    );
+
+    let stopID = feature.properties.stopId;
+    let muniLine = feature.properties.Route;
+
+    let stopInfo =  APICallResponse.filter(function(stop) {
+      return stop.stop_point_ref == stopID;
+    });
+
+    // console.log(stopInfo.length, feature.properties.Route);
+    console.log(stopInfo, feature.properties.Route, stopID);
+
+    if(stopInfo.length == 0){
+      layer.bindPopup(
+        "<h3>" + "Stop ID: " + stopID + "</h3>" +
+        "<hr>" +
+        // "<p>" + new Date(feature.properties.time) + //"</p>" +
+        "<br>" +
+        // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
+        "<b>" + "Line: " + "</b>" + muniLine + "</p>"
+      );
+    }
+    else {
+      let stopInfoObj = stopInfo[0];
+
+      let direction = stopInfoObj.direction_ref;
+      let lines = stopInfoObj.lines;
+
+      function linesInfo(linesArray){
+
+        let htmlBlock = "";
+      
+        // let keys = Object.keys(linesArray[0]);
+
+        // console.log("linesArray keys", keys);
+        
+        for(let i = 0; i < linesArray.length; i++){
+
+          let lineName =  linesArray[i].line_ref;
+          let minLate = linesArray[i].scores.min_late;
+          // console.log("minLate", minLate);
+
+          let predictionLabel = linesArray[i].scores.prediction_label;
+          // console.log("predictionLabel", predictionLabel);
+      
+          htmlBlock +=  "<hr>" +
+                        "<p>" + 
+                          "<b>Line: </b>" + lineName + "<br>" +
+                          "<b>Seconds Late: </b>" + minLate + "<br>" +
+                          "<b>Shame Score: </b>" + predictionLabel +                          
+                        "</p>";
+          
+        }
+      
+        return htmlBlock;
+      }
+
+      layer.bindPopup(
+        "<h3>" + "Stop ID: " + stopID + "</h3>" +
+        "<h3>" + "Direction: " + direction + "</h3>" + 
+        linesInfo(lines)
+      );
+    }
   }
 
-  // abracadabra
+
   function createMarkers(feature, latlng) {
 
-    // console.log("info: ", feature.stopId);
-    // let radius = feature.properties.mag * 3;
-    let radius = stopCircleRadius;
-    let color = stopCircleColor;
+    let radius = muniStopCircleRadius;
+    let circleColor = muniStopCircleColor;
 
-    if( selectedRoutesList.includes(feature.properties.Route) ){
+    if( selectedMUNILineNamesList.includes(feature.properties.Route) ){
       let name = feature.properties.Route;
-      color = selectedRoutes[name]["color"];      
+      circleColor = selectedMUNILines[name].color;      
     }
-
-    //let color = getColor(feature.properties.mag);
 
     let geojsonMarkerOptions = {
       // these properties deligate the fill color and opacity
       pane: paneName,
       fillOpacity: 0.8,
-      fillColor: color,
+      fillColor: circleColor,
       // this properties sets the radius size DUH!
       radius: radius,
       // these properties create the black outline
@@ -259,8 +230,9 @@ function createFeatures(munistopData, paneName) {
   }
 
 
-  // Create a GeoJSON layer containing the features array on the earthquakeData object
+  // Create a GeoJSON layer containing the features array oF the munistopData object
   // Run the onEachFeature function once for each piece of data in the array
+  // and create a marker for each piece of data in the array
   let muniStops = L.geoJSON(munistopData, {
     onEachFeature: onEachFeature,
     pointToLayer: createMarkers
@@ -271,12 +243,18 @@ function createFeatures(munistopData, paneName) {
 }
 
 
-
+/* ###################################################################
+   ****  FUNCTION TO CREATE THE ACTUAL MAP
+   ****  AND ADD ALL THE LAYERS AND PANES TO IT
+###################################################################### */
 // **************** FUNCTION TO CREATE THE FINAL MAP LAYERS ******************
 function createMap() {  
 // function createMap(earthquakes, tectonicPlates) {
 
-  // Define various map layers
+  // *************************************************************
+  //     FIRST DEFINE THE "TILE LAYERS" TO USE AS  
+  //     THE ACTUAL MAPS WE WILL DRAW FEATURES ON TOP OF 
+  // *************************************************************
   var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
@@ -303,9 +281,11 @@ function createMap() {
     maxZoom: 18,
     id: "mapbox.outdoors",
     accessToken: API_KEY
-  });  
+  });
 
+  // *************************************************************
   // Define a baseMaps object to hold our base layers
+  // *************************************************************
   var baseMaps = {
     "Street Map": streetmap,
     "Outdoors": outdoors,
@@ -313,17 +293,36 @@ function createMap() {
     "Dark Map": darkmap
   };
 
-  // console.log("creating features", muniStopsGeoJSON.features);
-
+  // *************************************************************
+  //     NOW CREATE OUR geoJson LAYERS FOR THE
+  //     MUNI STOPS AND MUNILINES
+  // *************************************************************  
   let muniStops = createFeatures(muniStopsGeoJSON.features, 'muniStopsPane');
 
-  // Create overlay object to hold our overlay layer
+  console.log(muniStopsGeoJSON.features);
+
+  let muniLines = L.geoJson(muniLinesGeoJSONFiltered, 
+    { 
+      pane: 'muniLinesPane',
+      onEachFeature: (function (feature, layer) {
+          layer.bindPopup(
+            "<h3>" + feature.properties.name + " Muni Line</h3>"
+          );
+      }),
+      style:  (function (feature) {
+        let muniLineName = feature.properties.name;
+        let muniLineLineColor = selectedMUNILines[muniLineName].color;
+        return { fillOpacity: 0.0, weight: 2, opacity: 1, color: muniLineLineColor };
+      })
+    }
+  );
+
+
+
+  // Create overlay object to hold our overlay layers
   var overlayMaps = {
-    // Earthquakes: earthquakes,
-    // Significant: significantEarthquakes,
-    // TectonicPlates: tectonicPlates,
     MuniStops: muniStops,
-    MuniRoutes: muniRoutes
+    MuniLines: muniLines
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display on load
@@ -336,25 +335,17 @@ function createMap() {
   });
 
   // set up our panes and zIndex ordering so they layer correctly when added and removed using the UI control layer
-  // myMap.createPane('normalEarthquakesPane');
-  // myMap.getPane('normalEarthquakesPane').style.zIndex = 400;
-
-  // myMap.createPane('significantEarthquakesPane');
-  // myMap.getPane('significantEarthquakesPane').style.zIndex = 401;
-  
-  // myMap.createPane('tectonicPlatesPane');
-  // myMap.getPane('tectonicPlatesPane').style.zIndex = 398;
-
   myMap.createPane('muniStopsPane');
   myMap.getPane('muniStopsPane').style.zIndex = 400;
 
-  myMap.createPane('muniRoutesPane');
-  myMap.getPane('muniRoutesPane').style.zIndex = 399;
+  myMap.createPane('muniLinesPane');
+  myMap.getPane('muniLinesPane').style.zIndex = 399;
 
 
+  // add the initial tile layer
   streetmap.addTo(myMap);
-  // earthquakes.addTo(myMap);
-  muniRoutes.addTo(myMap);
+  muniStops.addTo(myMap);
+  muniLines.addTo(myMap);
 
 
   // Create a layer control
@@ -382,7 +373,7 @@ function createMap() {
               grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
       }
       
-      if(numEarthquakeMaps == 2){
+      if(showSignificantColor === true){
         div.innerHTML += '<hr>' + '<i style="background:' + getColorSignificant(1) + '"></i> ' + "Significant";
       }
 
@@ -446,22 +437,44 @@ function createMap() {
 
 // // **************** ASYNCRONOUS COUNTER FUNCTIONS TO CONTROL WHEN WE CALL THE "createMap()" FUNCTION ******************
 // // **************** BECAUSE WE ONLY WANT TO CALL THIS FUNCTION AFTER ALL THE API CALLS HAVE COMPLETED *****************
-// function asyncCounter(numCalls, callback){
-//   this.callback = callback;
-//   this.numCalls = numCalls;
-//   this.calls = 0;
-// };
+function asyncCounter(numCalls, callback){
+  this.callback = callback;
+  this.numCalls = numCalls;
+  this.calls = 0;
+};
 
-// asyncCounter.prototype.increment = function(){
+asyncCounter.prototype.increment = function(){
 
-//   this.calls += 1;
+  this.calls += 1;
 
-//   if(this.calls === this.numCalls){
-//       this.callback();
-//   }
-// };
+  if(this.calls === this.numCalls){
+      this.callback();
+  }
+};
 
+/*
+function getDateOneWeekAgo(){
+  return "2019-07-20";
+}
 
+var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();
+*/
+
+// Perform a GET request to the query URL
+// d3.json(queryUrl, function(data) {
+// // d3.json(normalEarthquakesQueryUrl, function(data) {
+
+//   // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
+//   // earthquakes = createFeatures(data.features, getColorNormal, 'normalEarthquakesPane');
+//   APICallResponse = data.results;
+  
+//   console.log(APICallResponse);
+
+//   myAsyncCounter.increment();
+//   console.log("finished API call");
+
+// });
 
 
 createMap();
