@@ -23,8 +23,11 @@ let myAsyncCounter = new asyncCounter(numAPICalls, createMap);
 // Store our API endpoint inside queryUrl
 let queryUrl  = "";
 
+let queryTime = parseQueryTime(userSelectedTime);
+
 if(useActualAPIForQueries){
-    queryUrl = "https://muni-db-service.herokuapp.com/scores";
+    // queryUrl = "https://muni-db-service.herokuapp.com/scores";
+    queryUrl = "https://muni-db-service.herokuapp.com/scores?time=" + queryTime;
 }
 else{
     queryUrl = "https://jsonplaceholder.typicode.com/posts";
@@ -354,7 +357,7 @@ function createUIElements(myMap, baseMaps, overlayMaps){
         var div = L.DomUtil.create('div', 'info legend');
 
         // div.innerHTML = 'Time Picker<br><input type="text" class="form-control js-time-picker" value="02:56">';
-        div.innerHTML = 'Time Picker<br><input type="text" class="form-control js-time-picker" value="08:00">';
+        div.innerHTML = 'Time Picker<br><input type="text" class="form-control js-time-picker" value="' + userSelectedTime + '">' ;
         return div;
     };
 

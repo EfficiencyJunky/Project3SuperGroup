@@ -28,6 +28,22 @@ console.log("MUNILineNamesList", MUNILineNamesList);
 let MUNIDirectionsList = ["Inbound", "Outbound"];
 let userSelectedDirectionsList = MUNIDirectionsList;
 
+let userSelectedTime = getCurrentTime();
+
+// **************** GET THE DATE 7 DAYS AGO ******************
+function getCurrentTime(){
+  let todaysDate = new Date();
+
+  let HH = String(todaysDate.getHours()).padStart(2, '0');
+  let MM = String(todaysDate.getMinutes()).padStart(2, '0');
+  
+  let time = HH + ':' + MM;
+
+  // console.log("time", time);
+
+  return time;
+}
+
 // ************************ FILTER THE MUNI LINES WE WANT TO DISPLAY BASED ON SELECTED MUNI LINES ************************  
 // we need to create a version of the muniLinesGeoJSON object that only contains the 
 // MUNI lines we care about as defined in the 'MUNILinesInfo' object above

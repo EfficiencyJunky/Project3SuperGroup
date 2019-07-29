@@ -291,30 +291,27 @@ function createFeatures(munistopData, paneName) {
 // **************** HELPER FUNCTIONS ******************
 // **************** HELPER FUNCTIONS ******************
 
-// **************** GET THE DATE 7 DAYS AGO ******************
-// function getDateOneWeekAgo(){
-//   let todaysDate = new Date();
-//   let dd = String(todaysDate.getDate()).padStart(2, '0');
-//   let mm = String(todaysDate.getMonth() + 1).padStart(2, '0'); //January is 0!
-//   let yyyy = todaysDate.getFullYear();
-  
-//   let today = yyyy + '-' + mm + '-' + dd;
-//   // console.log("date:", today);
-  
-//   let sevenDaysAgoDate = new Date();
-//   sevenDaysAgoDate.setDate(todaysDate.getDate() - 7);
-//   let dd2 = String(sevenDaysAgoDate.getDate()).padStart(2, '0');
-//   let mm2 = String(sevenDaysAgoDate.getMonth() + 1).padStart(2, '0'); //January is 0!
-//   let yyyy2 = sevenDaysAgoDate.getFullYear();
-  
-//   let sevenDaysAgoString = yyyy2 + '-' + mm2 + '-' + dd2;
-  
-//   console.log("date 7 days:", sevenDaysAgoString);
 
-//   return sevenDaysAgoString;
-// }
+function parseQueryTime(pickerValue){
 
+  hour = parseFloat(pickerValue.split(":")[0]);
+  minutes = parseInt(pickerValue.split(":")[1]);
 
+  if(minutes < 15){
+    return hour;
+  } 
+  else if(minutes >= 15 && minutes < 45 ){
+    return hour + 0.5;
+  }
+  else{
+    time = hour + 1.0;
+    if(time > 23.5){
+      return 0.0;
+    }
+    return hour + 1.0;
+  }
+  
+}
 
 
 /*
@@ -496,7 +493,12 @@ function updateMuniDirectionSelection(){
 function timePickerEventHandler(){
 
   pickerValue = this.value;
-  console.log("picker value", pickerValue);
+  userSelectedTime = pickerValue;
+
+  queryTime = parseQueryTime(pickerValue);
+
+  console.log("queryTime", queryTime);
+
 
   // let queryUrl = "https://muni-db-service.herokuapp.com/scores/" + pickerValue;
   let queryUrl  = "";
@@ -536,6 +538,13 @@ function timePickerEventHandler(){
 
 }
 
+
+
+
+
+
+
+
 function reCreateMap(){
 
   let centerPosition = myMap.getCenter();
@@ -551,6 +560,14 @@ function reCreateMap(){
   createMap();
 
 }
+
+
+
+
+
+
+
+
 
 // // **************** ASYNCRONOUS COUNTER FUNCTIONS TO CONTROL WHEN WE CALL THE "createMap()" FUNCTION ******************
 // // **************** BECAUSE WE ONLY WANT TO CALL THIS FUNCTION AFTER ALL THE API CALLS HAVE COMPLETED *****************
