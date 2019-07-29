@@ -150,6 +150,8 @@ function createFeatures(munistopData, paneName) {
 
     let radius = muniStopCircleRadius;
     let circleColor = muniStopCircleColor;
+    let circleOutlineColor = "#000";
+    let circleOutlineWeight = 0.5;
 
     // grab the stop ID from this feature
     let stopId = feature.properties.stopId;
@@ -166,7 +168,7 @@ function createFeatures(munistopData, paneName) {
       let linesArray = stopInfo[0].lines;
       let lineName = "";
 
-      let shameScore = 0;
+      let shameScores = [0];
 
       linesArray.forEach((line) =>{
 
@@ -174,11 +176,22 @@ function createFeatures(munistopData, paneName) {
         let minLate = line.scores.min_late;
         let shameScoreLabel = line.scores.prediction_label;
 
+        // FIX THIS - use real shame score
+        shameScores.push(Math.floor(Math.random() * Math.floor(7)));
 
       });
 
-      circleColor = MUNILinesInfo[lineName].color;
+      let maxShameScore = Math.max(...shameScores);
 
+      // FIX THIS - use real max shame score
+      circleColor = MUNILinesInfo[lineName].color; 
+      // circleColor = getColorNormal(maxShameScore);
+
+      if(MUNILinesInfo[lineName].vehicle == "tram") {
+        circleOutlineColor = 'white';
+        circleOutlineWeight = 1.0;
+      }
+        
       // TODO -- make logic here to choose the color of the muni stop based on the highest visible shame score
       // getColorNormal(d)
 
@@ -200,9 +213,9 @@ function createFeatures(munistopData, paneName) {
       fillColor: circleColor,
       // this properties sets the radius size DUH!
       radius: radius,
-      // these properties create the black outline
-      color: "#000",
-      weight: 0.5,
+      // these properties create the circle outline
+      color: circleOutlineColor,
+      weight: circleOutlineWeight,
       opacity: 1
     };
 
@@ -243,9 +256,6 @@ function createFeatures(munistopData, paneName) {
         return true;
     }
   }
-
-
-
 
 
 }
@@ -424,7 +434,7 @@ function updateMuniLineSelection(){
 
   userSelectedMUNILineList = choices;
 
-  console.log("checkboxes chosen", MUNILineNamesList);
+  // console.log("checkboxes chosen", MUNILineNamesList);
 
 
 
@@ -480,7 +490,7 @@ function updateMuniDirectionSelection(){
 
   userSelectedDirectionsList = choices;
 
-  console.log("checkboxes chosen", userSelectedDirectionsList);
+  // console.log("checkboxes chosen", userSelectedDirectionsList);
 
 
 

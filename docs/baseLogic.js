@@ -61,7 +61,7 @@ d3.json(queryUrl, function(data) {
     muniLinesGeoJSONFiltered = filterMuniLineGeoJSONfromAPICall();
     muniStopsGeoJSONFiltered = filterMuniStopGeoJSONfromAPICall();
 
-    console.log("muniLinesGeoJSONFiltered", muniLinesGeoJSONFiltered);
+    console.log("muniLinesGeoJSONFiltered", muniLinesGeoJSONFiltered.features);
     console.log("muniStopsGeoJSONFiltered", muniStopsGeoJSONFiltered);
 
     // once this is called, the "createMap()" function will be executed
@@ -202,7 +202,7 @@ function createMap(){
         "Dark Map": darkmap
     };
 
-    console.log("unique lines from API Call", userSelectedMUNILineList);
+    
     // *************************************************************
     //     SECOND DEFINE THE "DATA LAYERS" TO USE AS THE VISUAL 
     //     INFORMATION/DATA WE WILL DRAW ON TOP OF THE TILE LAYER 
@@ -214,7 +214,6 @@ function createMap(){
               layer.bindPopup(
                 "<h3>" + feature.properties.name + " Muni Line</h3>"
               );
-              console.log("munilines oneachfeature");
           }),
           style:  (function (feature) {
             let muniLineName = feature.properties.name;
@@ -229,8 +228,6 @@ function createMap(){
 
         }
     );
-
-    console.log("munilines", muniLines);
 
     let muniStops = createFeatures(muniStopsGeoJSONFiltered, 'muniStopsPane');
 
