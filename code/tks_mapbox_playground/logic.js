@@ -1,72 +1,4 @@
 /* ###################################################################
-   ****  ALL OF OUR GLOBAL VARIABLES
-###################################################################### */
-
-// ************************  API CALL FUNCTIONS TO DOWNLOAD ALL THE SHAME SCORE DATA ************************  
-// Store our API endpoint inside queryUrl
-let queryUrl = "https://muni-db-service.herokuapp.com/scores";
-let APICallResponse = {};
-APICallResponse = shameScoreAPIResponse.results;
-console.log(APICallResponse);
-
-// now we create an asyncronous counter that only calls the "createMap" function
-// once the counter has been incremented enough times to equal the "numAPICalls" integer
-// currently we are only doing this once so it's sort of not really useful
-// but if we wanted to execute another API call we could update it
-let numAPICalls = 1;
-let myAsyncCounter = new asyncCounter(numAPICalls, createMap);
-
-// muni stop circle default parameters
-let muniStopCircleRadius = 20;
-let muniStopCircleColor = "#ff7877";
-
-// DEFINE WHICH LINES WE WANT TO ADD TO THE MAP AND SOME METADATA FOR EACH OF THEM
-let selectedMUNILines = {
-  "2":   {"long_name":"SUTTER/CLEMENT",       "color": "red",       "has_rapid": false,   "has_express": 0,   "has_owl": false},
-  "7":   {"long_name":"HAIGHT-NORIEGA",       "color": "purple",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
-  "14":  {"long_name":"MISSION",              "color": "yellow",    "has_rapid": false,   "has_express": 1,   "has_owl": false},  
-  "38":  {"long_name":"GEARY",                "color": "pink",      "has_rapid": true,    "has_express": 2,   "has_owl": false},     
-  "KT":  {"long_name":"INGLESIDE/THIRD",      "color": "cyan",    "has_rapid": false,   "has_express": 0,   "has_owl": false},
-  "J":   {"long_name":"CHURCH",               "color": "orange",    "has_rapid": false,   "has_express": 0,   "has_owl": false},  
-  "M":   {"long_name":"OCEANVIEW",            "color": "green",     "has_rapid": false,   "has_express": 0,   "has_owl": true},
-  "N":   {"long_name":"JUDAH",                "color": "blue",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
-};
-
-// CREATE A LIST OF JUST THE MUNI LINE NUMBERS FROM THE KEYS OF THE 'selectedMUNILines' OBJECT ABOVE
-const selectedMUNILineNamesList = Object.keys(selectedMUNILines);
-
-
-
-// the GeoJSON object only has 3 key value pairs at the top level. it's structure looks like this
-// you can fiew the full object here: https://transit.land/api/v1/routes.geojson?operated_by=o-9q8y-sfmta&per_page=false
-/*
-    {
-      "features": [],
-      "meta": {
-        "sort_key": "id",
-        "sort_order": "asc",
-        "per_page": "false"
-      },
-      "type": "FeatureCollection"
-    }
-*/
-
-// we need to create a version of the muniLinesGeoJSON object that only contains the 
-// MUNI lines we care about as defined in the 'selectedMUNILines' object above
-// but we only want to replace the value of the "features" key and keep the other two keys values in tact
-let muniLinesGeoJSONFiltered = {};
-
-muniLinesGeoJSONFiltered.features = muniLinesGeoJSON.features.filter((feature) => {
-  return selectedMUNILineNamesList.includes(feature.properties.name);
-});
-muniLinesGeoJSONFiltered.meta = muniLinesGeoJSON.meta;
-muniLinesGeoJSONFiltered.type = muniLinesGeoJSON.type;
-
-
-let showSignificantColor = false;
-
-
-/* ###################################################################
    ****  HELPER FUNCTIONS
 ###################################################################### */
 
@@ -90,24 +22,22 @@ function getColorSignificant(d) {
 /* #################################################################################
    ****  FUNCTION TO CREATE THE FEATURES (popups and markers) FOR EACH MUNISTOP
 #################################################################################### */
-function createFeatures(munistopData, paneName) {  
-//function createFeatures(earthquakeData, getColor, paneName) {
-
-
 // GEOJSON WITH ALL THE STOP LOCATIONS
 /*
-  "features": {
-    "type": string;
-    "geometry": {
-        "type": string;
-        "coordinates": number[];
-    };
-    "properties": {
-        "Route": string;
-        "stopId": number;
-        "title": string;
-    };
-  }[]
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates":  [ -122.39654,37.7932299 ]
+      },
+      "properties": {
+        "stopId":17217,
+        "title":"Embarcadero Station Outbound"
+      }
+    },
+    etc...
+  ]
 */
 
 
@@ -135,69 +65,82 @@ function createFeatures(munistopData, paneName) {
 }
 */
 
+function createFeatures(munistopData, paneName) {  
+//function createFeatures(earthquakeData, getColor, paneName) {
+
+  // Create a GeoJSON layer containing the features array oF the munistopData object
+  // Run the onEachFeature function once for each piece of data in the array
+  // and create a marker for each piece of data in the array
+  let muniStops = L.geoJSON(munistopData, {
+    onEachFeature: onEachFeature,
+    pointToLayer: createMarkers,
+    filter: filterMUNIStops
+  });
+
+  return muniStops;
+
   // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the muni stop and the lines it services
   function onEachFeature(feature, layer) {
 
-    let stopID = feature.properties.stopId;
-    let muniLine = feature.properties.Route;
+    //abracadabra
+    let stopId = feature.properties.stopId;
+    let stopTitle = feature.properties.title;
+    // let muniLine = feature.properties.Route;
 
     let stopInfo =  APICallResponse.filter(function(stop) {
-      return stop.stop_point_ref == stopID;
+      return stop.stop_point_ref == stopId;
     });
 
     // console.log(stopInfo.length, feature.properties.Route);
-    console.log(stopInfo, feature.properties.Route, stopID);
+    // console.log("stops being used", stopInfo, feature.properties.Route, stopId);
 
-    if(stopInfo.length == 0){
+
+    // if the stopID was found in the APICallResponse and there were no duplicate stop IDs found, then it will return an array with length 1
+    if(stopInfo.length == 1){
+
+      let direction = stopInfo[0].direction_ref;
+      let lines = stopInfo[0].lines;
+
       layer.bindPopup(
-        "<h3>" + "Stop ID: " + stopID + "</h3>" +
-        "<hr>" +
-        // "<p>" + new Date(feature.properties.time) + //"</p>" +
-        "<br>" +
-        // "<p>" + "Magnitude: " + feature.properties.mag + "</p>"
-        "<b>" + "Line: " + "</b>" + muniLine + "</p>"
+        "<h3>" + "Stop ID: " + stopId + "</h3>" +
+        "<h3>" + "Direction: " + direction + "</h3>" + 
+        "<h3>" + "Title: " + stopTitle + "</h3>" + 
+        linesInfo(lines)
       );
-    }
-    else {
-      let stopInfoObj = stopInfo[0];
 
-      let direction = stopInfoObj.direction_ref;
-      let lines = stopInfoObj.lines;
-
+      // this function is used to generate the HTML for each line in the lines array
       function linesInfo(linesArray){
 
         let htmlBlock = "";
-      
-        // let keys = Object.keys(linesArray[0]);
-
-        // console.log("linesArray keys", keys);
         
-        for(let i = 0; i < linesArray.length; i++){
+        linesArray.forEach((line) =>{
 
-          let lineName =  linesArray[i].line_ref;
-          let minLate = linesArray[i].scores.min_late;
-          // console.log("minLate", minLate);
+          let lineName =  line.line_ref;
+          let minLate = line.scores.min_late;
+          let shameScore = line.scores.prediction_label;
 
-          let predictionLabel = linesArray[i].scores.prediction_label;
-          // console.log("predictionLabel", predictionLabel);
-      
-          htmlBlock +=  "<hr>" +
-                        "<p>" + 
-                          "<b>Line: </b>" + lineName + "<br>" +
-                          "<b>Seconds Late: </b>" + minLate + "<br>" +
-                          "<b>Shame Score: </b>" + predictionLabel +                          
-                        "</p>";
-          
-        }
+          if(userSelectedMUNILineList.includes(lineName)){
+            htmlBlock +=  "<hr>" +
+            "<p>" + 
+              "<b>Line: </b>" + lineName + "<br>" +
+              "<b>Seconds Late: </b>" + minLate + "<br>" +
+              "<b>Shame Score: </b>" + shameScore +                          
+            "</p>";
+
+          }
+
+        });
       
         return htmlBlock;
       }
 
+
+    } else {
       layer.bindPopup(
-        "<h3>" + "Stop ID: " + stopID + "</h3>" +
-        "<h3>" + "Direction: " + direction + "</h3>" + 
-        linesInfo(lines)
+        "<h3>" + "Stop ID: " + stopId + "</h3>" +
+        "<hr>" +
+        "<b>" + "Title: " + "</b>" + stopTitle + "</p>"
       );
     }
   }
@@ -208,10 +151,47 @@ function createFeatures(munistopData, paneName) {
     let radius = muniStopCircleRadius;
     let circleColor = muniStopCircleColor;
 
-    if( selectedMUNILineNamesList.includes(feature.properties.Route) ){
-      let name = feature.properties.Route;
-      circleColor = selectedMUNILines[name].color;      
+    // grab the stop ID from this feature
+    let stopId = feature.properties.stopId;
+
+    // search the APICallResponse for that stop ID
+    let stopInfo =  APICallResponse.filter(function(stop) {
+      return stop.stop_point_ref == stopId;
+    });
+
+    // if the stopID was found in the APICallResponse and there were no duplicate stop IDs found, then it will return an array with length 1
+    if(stopInfo.length == 1){
+
+      let direction = stopInfo[0].direction_ref;
+      let linesArray = stopInfo[0].lines;
+      let lineName = "";
+
+      let shameScore = 0;
+
+      linesArray.forEach((line) =>{
+
+        lineName =  line.line_ref;
+        let minLate = line.scores.min_late;
+        let shameScoreLabel = line.scores.prediction_label;
+
+
+      });
+
+      circleColor = MUNILinesInfo[lineName].color;
+
+      // TODO -- make logic here to choose the color of the muni stop based on the highest visible shame score
+      // getColorNormal(d)
+
+
+    } else{
+      radius = 200;
+      circleColor = "black";
     }
+
+    // if( MUNILineNamesList.includes(feature.properties.Route) ){
+    //   let name = feature.properties.Route;
+    //   circleColor = MUNILinesInfo[name].color;      
+    // }
 
     let geojsonMarkerOptions = {
       // these properties deligate the fill color and opacity
@@ -230,15 +210,43 @@ function createFeatures(munistopData, paneName) {
   }
 
 
-  // Create a GeoJSON layer containing the features array oF the munistopData object
-  // Run the onEachFeature function once for each piece of data in the array
-  // and create a marker for each piece of data in the array
-  let muniStops = L.geoJSON(munistopData, {
-    onEachFeature: onEachFeature,
-    pointToLayer: createMarkers
-  });
+  function filterMUNIStops(feature) {
 
-  return muniStops;
+    //abracadabra
+    let stopId = feature.properties.stopId;
+    let stopTitle = feature.properties.title;
+
+    let stopInfo =  APICallResponse.filter(function(stop) {
+      return stop.stop_point_ref == stopId;
+    });
+
+    // if the stopID was found in the APICallResponse and there were no duplicate stop IDs found, then it will return an array with length 1
+    if(stopInfo.length == 1){
+
+      // now we need to see if the lines at this stop are in our user selected lines array
+      // and if the direction is also in the user selected direction array
+      let direction = stopInfo[0].direction_ref;
+      
+      let selectedLines = stopInfo[0].lines.filter(function(line) {
+        return userSelectedMUNILineList.includes(line.line_ref);
+      });
+
+      if( (selectedLines.length > 0)){
+        if(userSelectedDirectionsList.includes(direction)){return true;}
+        else{return false;}
+      } else{
+        return false;
+      } 
+      
+
+    } else {
+        return true;
+    }
+  }
+
+
+
+
 
 }
 
@@ -248,139 +256,13 @@ function createFeatures(munistopData, paneName) {
    ****  AND ADD ALL THE LAYERS AND PANES TO IT
 ###################################################################### */
 // **************** FUNCTION TO CREATE THE FINAL MAP LAYERS ******************
-function createMap() {  
+// function createMap2(myMap) {  
 // function createMap(earthquakes, tectonicPlates) {
 
   // *************************************************************
-  //     FIRST DEFINE THE "TILE LAYERS" TO USE AS  
-  //     THE ACTUAL MAPS WE WILL DRAW FEATURES ON TOP OF 
+  //     ADD UI ELEMENTS
   // *************************************************************
-  var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.streets",
-    accessToken: API_KEY
-  });
 
-  var darkmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.dark",
-    accessToken: API_KEY
-  });
-
-  var satellite = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.streets-satellite",
-    accessToken: API_KEY
-  });  
-
-  var outdoors = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.outdoors",
-    accessToken: API_KEY
-  });
-
-  // *************************************************************
-  // Define a baseMaps object to hold our base layers
-  // *************************************************************
-  var baseMaps = {
-    "Street Map": streetmap,
-    "Outdoors": outdoors,
-    "Satellite": satellite,
-    "Dark Map": darkmap
-  };
-
-  // *************************************************************
-  //     NOW CREATE OUR geoJson LAYERS FOR THE
-  //     MUNI STOPS AND MUNILINES
-  // *************************************************************  
-  let muniStops = createFeatures(muniStopsGeoJSON.features, 'muniStopsPane');
-
-  console.log(muniStopsGeoJSON.features);
-
-  let muniLines = L.geoJson(muniLinesGeoJSONFiltered, 
-    { 
-      pane: 'muniLinesPane',
-      onEachFeature: (function (feature, layer) {
-          layer.bindPopup(
-            "<h3>" + feature.properties.name + " Muni Line</h3>"
-          );
-      }),
-      style:  (function (feature) {
-        let muniLineName = feature.properties.name;
-        let muniLineLineColor = selectedMUNILines[muniLineName].color;
-        return { fillOpacity: 0.0, weight: 2, opacity: 1, color: muniLineLineColor };
-      })
-    }
-  );
-
-
-
-  // Create overlay object to hold our overlay layers
-  var overlayMaps = {
-    MuniStops: muniStops,
-    MuniLines: muniLines
-  };
-
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
-  var myMap = L.map("map", {
-    center: [
-      37.75, -122.45
-    ],
-    zoom: 12,
-    // layers: [streetmap, earthquakes]
-  });
-
-  // set up our panes and zIndex ordering so they layer correctly when added and removed using the UI control layer
-  myMap.createPane('muniStopsPane');
-  myMap.getPane('muniStopsPane').style.zIndex = 400;
-
-  myMap.createPane('muniLinesPane');
-  myMap.getPane('muniLinesPane').style.zIndex = 399;
-
-
-  // add the initial tile layer
-  streetmap.addTo(myMap);
-  muniStops.addTo(myMap);
-  muniLines.addTo(myMap);
-
-
-  // Create a layer control
-  // Pass in our baseMaps and overlayMaps
-  // Add the layer control to the map
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
-
-
-  let legend = L.control({position: 'bottomright'});
-
-  legend.onAdd = function (map) {
-  
-      let div = L.DomUtil.create('div', 'info legend'),
-          grades = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0],
-          labels = [];
-  
-      div.innerHTML += '<b>SHAME SCORE</b><br>';
-
-      // loop through our density intervals and generate a label with a colored square for each interval
-      for (let i = 0; i < grades.length; i++) {
-          div.innerHTML +=
-              '<i style="background:' + getColorNormal(grades[i] + 1) + '"></i> ' +
-              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-      }
-      
-      if(showSignificantColor === true){
-        div.innerHTML += '<hr>' + '<i style="background:' + getColorSignificant(1) + '"></i> ' + "Significant";
-      }
-
-      return div;
-  };
-  
-  legend.addTo(myMap);
 
   // map.on('zoomend', function() {
   //   var currentZoom = map.getZoom();
@@ -401,9 +283,7 @@ function createMap() {
   //   // }
   // }  
 
-  
-
-}
+// }
 
 
 
@@ -435,6 +315,243 @@ function createMap() {
 // }
 
 
+
+
+/*
+function getDateOneWeekAgo(){
+  return "2019-07-20";
+}
+
+var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();
+*/
+
+
+
+
+
+// IF NEW TIME IS CHOSEN CALL THIS FUNCTION
+/*
+function updateTimeSelectionAndMakeAPICall(){
+
+  // console.log("checkbox chosen");
+  
+  let choices = [];
+
+  d3.selectAll(".MuniLineCheckbox").each( function(d) {
+    
+    // console.log("checkbox chosen 2");
+
+    let cb = d3.select(this);
+
+    if(cb.property("checked")){
+
+      let chosenCheckBox = cb.property("value");
+
+      // console.log("checkbox chosen: " + chosenCheckBox);
+
+      choices.push(chosenCheckBox);
+    }
+
+  });
+
+  let api_call_base = "/api/v1.0/advertiser_type"
+  let item_key = "advertiser"
+
+  let api_call = createAPICallString(api_call_base, item_key, choices);
+
+  // console.log("Api Call == ", api_call);
+
+  d3.json( api_call ).then((data) => {
+    // displayData(data[0]);
+    chartdata = data[0];
+    comparison_data = data[2];
+    gc_data = data[3];
+    // buildCharts(chartdata, comparison_data);  
+    buildCharts();  
+    displayTableData(data[1]);
+
+  });   
+
+
+}
+*/
+
+
+// MUNI CHECKBOX HTML AND EVENT HANDLERS
+function createMUNILineCheckboxDivHTML(){
+
+  let HTMLString = '';
+
+  MUNILineNamesList.forEach((line, i) => {
+
+    if(userSelectedMUNILineList.includes(line)){
+      //            '<input type="checkbox" class="MuniLineCheckbox" value="N" checked>N Line</br>'
+      HTMLString += '<input type="checkbox" class="MuniLineCheckbox" value="' + line + '" checked> ' + line + ' Line</br>';
+    } else{
+      //            '<input type="checkbox" class="MuniLineCheckbox" value="N">N Line</br>'
+      HTMLString += '<input type="checkbox" class="MuniLineCheckbox" value="' + line + '"> ' + line + ' Line</br>';
+    }
+
+
+
+  });
+
+  return HTMLString;
+}
+
+
+
+function updateMuniLineSelection(){
+
+  // console.log("checkbox chosen");
+  
+  let choices = [];
+
+  d3.selectAll(".MuniLineCheckbox").each( function(d) {
+    
+    // console.log("checkbox chosen 2");
+
+    let cb = d3.select(this);
+
+    if(cb.property("checked")){
+
+      let chosenCheckBox = cb.property("value");
+
+      // console.log("checkbox chosen: " + chosenCheckBox);
+
+      choices.push(chosenCheckBox);
+    }
+
+  });
+
+  userSelectedMUNILineList = choices;
+
+  console.log("checkboxes chosen", MUNILineNamesList);
+
+
+
+  //delete and re-create this map
+  reCreateMap();
+
+}
+
+// DIRECTION CHECKBOX HTML AND EVENT HANDLERS
+function createDirectionCheckboxDivHTML(){
+
+  let HTMLString = '';
+
+  MUNIDirectionsList.forEach((direction, i) => {
+
+    if(userSelectedDirectionsList.includes(direction)){
+      //            '<input type="checkbox" class="MuniLineCheckbox" value="N" checked>N Line</br>'
+      HTMLString += '<input type="checkbox" class="MuniDirectionCheckbox" value="' + direction + '" checked> ' + direction + '</br>';
+    } else{
+      //            '<input type="checkbox" class="MuniLineCheckbox" value="N">N Line</br>'
+      HTMLString += '<input type="checkbox" class="MuniDirectionCheckbox" value="' + direction + '"> ' + direction + '</br>';
+    }
+
+  });
+
+  return HTMLString;
+}
+
+
+// abracadabra
+function updateMuniDirectionSelection(){
+
+  // console.log("checkbox chosen");
+  
+  let choices = [];
+
+  d3.selectAll(".MuniDirectionCheckbox").each( function(d) {
+    
+    // console.log("checkbox chosen 2");
+
+    let cb = d3.select(this);
+
+    if(cb.property("checked")){
+
+      let chosenCheckBox = cb.property("value");
+
+      // console.log("checkbox chosen: " + chosenCheckBox);
+
+      choices.push(chosenCheckBox);
+    }
+
+  });
+
+  userSelectedDirectionsList = choices;
+
+  console.log("checkboxes chosen", userSelectedDirectionsList);
+
+
+
+  reCreateMap();
+
+}
+
+// // **************** TIME PICKER EVENT HANDLER ******************
+// // **************** TIME PICKER EVENT HANDLER *****************
+function timePickerEventHandler(){
+
+  pickerValue = this.value;
+  console.log("picker value", pickerValue);
+
+  // let queryUrl = "https://muni-db-service.herokuapp.com/scores/" + pickerValue;
+  let queryUrl  = "";
+
+  if(useActualAPIForQueries){
+      queryUrl = "https://muni-db-service.herokuapp.com/scores";
+  }
+  else{
+      queryUrl = "https://jsonplaceholder.typicode.com/posts";
+  }
+
+
+  // Perform a GET request to the query URL
+  d3.json(queryUrl, function(data) {
+  // d3.json(normalEarthquakesQueryUrl, function(data) {
+  
+      // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
+      if(useActualAPIForQueries){
+        APICallResponse = data.results;
+      }
+      else{
+        APICallResponse = shameScoreAPIResponse.results;
+      }
+  
+      console.log("APICallResponse", APICallResponse);
+  
+      // populate the muniStopsGeoJSONFiltered object with only the stops that are present in the APICall Response 
+      muniStopsGeoJSONFiltered = filterMuniStopGeoJSONfromAPICall();
+  
+      console.log("muniStopsGeoJSONFiltered", muniStopsGeoJSONFiltered);
+  
+      // once this is called, the "createMap()" function will be executed
+      reCreateMap();
+      // myAsyncCounter.increment();
+  
+  });
+
+}
+
+function reCreateMap(){
+
+  let centerPosition = myMap.getCenter();
+  let zoomLevel = myMap.getZoom();
+
+  myMap.remove();
+
+  myMap = L.map("map", {
+    center: centerPosition, // san francisco
+    zoom: zoomLevel
+  });
+
+  createMap();
+
+}
+
 // // **************** ASYNCRONOUS COUNTER FUNCTIONS TO CONTROL WHEN WE CALL THE "createMap()" FUNCTION ******************
 // // **************** BECAUSE WE ONLY WANT TO CALL THIS FUNCTION AFTER ALL THE API CALLS HAVE COMPLETED *****************
 function asyncCounter(numCalls, callback){
@@ -451,30 +568,3 @@ asyncCounter.prototype.increment = function(){
       this.callback();
   }
 };
-
-/*
-function getDateOneWeekAgo(){
-  return "2019-07-20";
-}
-
-var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-var normalEarthquakesQueryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=" + getDateOneWeekAgo();
-*/
-
-// Perform a GET request to the query URL
-// d3.json(queryUrl, function(data) {
-// // d3.json(normalEarthquakesQueryUrl, function(data) {
-
-//   // Once we get a response, send the data.features object to the createFeatures function along with color seting function and pane name
-//   // earthquakes = createFeatures(data.features, getColorNormal, 'normalEarthquakesPane');
-//   APICallResponse = data.results;
-  
-//   console.log(APICallResponse);
-
-//   myAsyncCounter.increment();
-//   console.log("finished API call");
-
-// });
-
-
-createMap();
