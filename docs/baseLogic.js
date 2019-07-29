@@ -46,9 +46,19 @@ d3.json(queryUrl, function(data) {
 
     console.log("APICallResponse", APICallResponse);
 
+    let uniqueMUNILinesFromAPICall = getUniqueMUNILinesFromAPICall();
+    
+    console.log("unique lines from API Call", uniqueMUNILinesFromAPICall);
+
+    // replace the global variables we will use for MUNI line filtering with the unique set of muni lines from the API Call
+    MUNILineNamesList = uniqueMUNILinesFromAPICall;
+    userSelectedMUNILineList = uniqueMUNILinesFromAPICall;
+    
     // populate the muniStopsGeoJSONFiltered object with only the stops that are present in the APICall Response 
+    muniLinesGeoJSONFiltered = filterMuniLineGeoJSONfromAPICall();
     muniStopsGeoJSONFiltered = filterMuniStopGeoJSONfromAPICall();
 
+    console.log("muniLinesGeoJSONFiltered", muniLinesGeoJSONFiltered);
     console.log("muniStopsGeoJSONFiltered", muniStopsGeoJSONFiltered);
 
     // once this is called, the "createMap()" function will be executed
@@ -56,6 +66,28 @@ d3.json(queryUrl, function(data) {
     myAsyncCounter.increment();
 
 });
+
+function getUniqueMUNILinesFromAPICall(){
+    
+    uniqueMUNILinesFromAPICall = [];
+    
+    APICallResponse.forEach((stop) =>{
+        
+        stop.lines.forEach((line) => {
+            let lineName = line.line_ref;
+
+            if(uniqueMUNILinesFromAPICall.includes(lineName) != true && originalMUNILineNamesList.includes(lineName)) {
+                uniqueMUNILinesFromAPICall.push(lineName);
+            }
+        });
+
+    });
+
+    return uniqueMUNILinesFromAPICall;
+
+}
+
+
 
 // ************************ FILTER OUT THE MUNI STOPS WE WILL USE FOR LOCATION DISPLAY ************************  
 // since the API call may return only a subset of the complete list of stops we have to choose from
@@ -90,6 +122,26 @@ function filterMuniStopGeoJSONfromAPICall(){
 
   return muniStopsGeoJSONFiltered;
 }
+
+
+
+// ************************ FILTER OUT THE MUNI LINES WE WILL USE FOR LOCATION DISPLAY ************************  
+// since the API call may return only a subset of the complete list of LINES we have to choose from
+// we want to filter out the list of MUNI LINES (which are in GeoJSON format and therefore allow us to place them on a map)
+// from the "munilines.js" object based on what we get back from the API call
+function filterMuniLineGeoJSONfromAPICall(uniqueMUNILinesFromAPICall){
+
+    let muniLinesGeoJSONFiltered =  {   
+        "type": "FeatureCollection",
+        "meta": muniLinesGeoJSON.meta,
+        "features": muniLinesGeoJSON.features.filter((feature) => {
+                        return MUNILineNamesList.includes(feature.properties.name);
+                    }) 
+    };    
+  
+    return muniLinesGeoJSONFiltered;
+}
+
 
 
 
@@ -147,7 +199,7 @@ function createMap(){
         "Dark Map": darkmap
     };
 
-        
+    console.log("unique lines from API Call", userSelectedMUNILineList);
     // *************************************************************
     //     SECOND DEFINE THE "DATA LAYERS" TO USE AS THE VISUAL 
     //     INFORMATION/DATA WE WILL DRAW ON TOP OF THE TILE LAYER 

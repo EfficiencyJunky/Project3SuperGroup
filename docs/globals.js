@@ -18,9 +18,10 @@ let MUNILinesInfo = {
   };
 
 // CREATE A LIST OF JUST THE MUNI LINE NUMBERS FROM THE KEYS OF THE 'MUNILinesInfo' OBJECT ABOVE
-let MUNILineNamesList = Object.keys(MUNILinesInfo);
+let originalMUNILineNamesList = Object.keys(MUNILinesInfo);
 
-let userSelectedMUNILineList = MUNILineNamesList;
+let MUNILineNamesList = originalMUNILineNamesList;
+let userSelectedMUNILineList = originalMUNILineNamesList;
 
 console.log("MUNILineNamesList", MUNILineNamesList);
 
@@ -47,14 +48,14 @@ let userSelectedDirectionsList = MUNIDirectionsList;
 
 
 // FILTER THE "muniLinesGeoJSON" OBJECT TO ONLY GIVE US THE ONES WE HAVE SPECIFIED ABOVE
-let muniLinesGeoJSONFiltered =  {   
-                                    "type": "FeatureCollection",
-                                    "meta": muniLinesGeoJSON.meta,
-                                    "features": muniLinesGeoJSON.features.filter((feature) => {
-                                                    return MUNILineNamesList.includes(feature.properties.name);
-                                                }) 
-                                };
-
+let muniLinesGeoJSONFiltered =  {};
+// let muniLinesGeoJSONFiltered =  {   
+//                                     "type": "FeatureCollection",
+//                                     "meta": muniLinesGeoJSON.meta,
+//                                     "features": muniLinesGeoJSON.features.filter((feature) => {
+//                                                     return MUNILineNamesList.includes(feature.properties.name);
+//                                                 }) 
+//                                 };
 
 // SETUP OTHER GLOBAL VARIABLES
 let muniStopsGeoJSONFiltered = {}; // this will be filled out when the API Call returns
