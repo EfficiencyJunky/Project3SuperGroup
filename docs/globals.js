@@ -2,8 +2,17 @@
    ****  ALL OF OUR GLOBAL VARIABLES
 ###################################################################### */
 
-let useActualAPIForQueries = false;
+let useActualAPIForQueries = true;
 
+let shameScoreInfo = {
+  "0-5 min late":           {"score":"1", "color":"#00FF00", "description": "No shame here! Your bus is likely to be on time."},
+  "5-10 min late":          {"score":"2", "color":"#00FF00", "description": "Mild shame. Your bus will be a little late, but you can probably make up the time with a brisk walk from the stop to your destination."},
+  "10-15 min late":         {"score":"3", "color":"#00FF00", "description": "Medium shame. Better build some buffer, your bus will be late."},
+  "15-20 min late":         {"score":"4", "color":"#00FF00", "description": "High shame. Your bus will be pretty late. Hunker down and give up any hope of a timely arrival"},  
+  "more than 20 min late":  {"score":"5", "color":"#00FF00", "description": "Maximum muni shame. Your bus will be significantly late, better send out a preemptive apology that you’ll be late and start walking."}
+};
+
+let shameScoreInfoKeys = Object.keys(shameScoreInfo);
 
 // DEFINE WHICH LINES WE WANT TO ADD TO THE MAP AND SOME METADATA FOR EACH OF THEM
 let MUNILinesInfo = {
@@ -15,7 +24,7 @@ let MUNILinesInfo = {
     "J":   {"long_name":"CHURCH",               "vehicle": "tram",   "color": "orange",    "has_rapid": false,   "has_express": 0,   "has_owl": false},  
     "M":   {"long_name":"OCEANVIEW",            "vehicle": "tram",   "color": "green",     "has_rapid": false,   "has_express": 0,   "has_owl": true},
     "N":   {"long_name":"JUDAH",                "vehicle": "tram",   "color": "blue",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
-  };
+};
 
 // CREATE A LIST OF JUST THE MUNI LINE NUMBERS FROM THE KEYS OF THE 'MUNILinesInfo' OBJECT ABOVE
 let originalMUNILineNamesList = Object.keys(MUNILinesInfo);

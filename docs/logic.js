@@ -4,12 +4,11 @@
 
 // **************** FUNCTIONS TO GET COLORS FOR CIRCLES BASED ON SHAME SCORE AND LEGEND ******************
 function getColorNormal(d) {
-  return d > 5.0  ? '#FF0000' :
-         d > 4.0  ? '#ff6600' :
-         d > 3.0  ? '#FFCC00' :
-         d > 2.0   ? '#ccff00' :
-         d > 1.0   ? '#66ff00' :
-         d > 0.0   ? '#00FF00' :
+  return d >= 5.0  ? '#FF0000' :
+         d >= 4.0  ? '#FFCC00' :
+         d >= 3.0   ? '#ccff00' :
+         d >= 2.0   ? '#66ff00' :
+         d >= 1.0   ? '#00FF00' :
                     '#00FF00';
 }
 
@@ -174,18 +173,19 @@ function createFeatures(munistopData, paneName) {
 
         lineName =  line.line_ref;
         let minLate = line.scores.min_late;
-        let shameScoreLabel = line.scores.prediction_label;
+        let shameScoreKey = line.scores.prediction_label;
 
         // FIX THIS - use real shame score
-        shameScores.push(Math.floor(Math.random() * Math.floor(7)));
+        // shameScores.push(Math.floor(Math.random() * Math.floor(7)));
+        shameScores.push(shameScoreInfo[shameScoreKey].score);
 
       });
 
       let maxShameScore = Math.max(...shameScores);
 
       // FIX THIS - use real max shame score
-      circleColor = MUNILinesInfo[lineName].color; 
-      // circleColor = getColorNormal(maxShameScore);
+      // circleColor = MUNILinesInfo[lineName].color; 
+      circleColor = getColorNormal(maxShameScore);
 
       if(MUNILinesInfo[lineName].vehicle == "tram") {
         circleOutlineColor = 'white';
@@ -514,12 +514,16 @@ function timePickerEventHandler(){
   let queryUrl  = "";
 
   if(useActualAPIForQueries){
-      queryUrl = "https://muni-db-service.herokuapp.com/scores";
+      // queryUrl = "https://muni-db-service.herokuapp.com/scores";
+      queryUrl = "https://muni-db-service.herokuapp.com/scores?time=" + queryTime;
   }
   else{
       queryUrl = "https://jsonplaceholder.typicode.com/posts";
   }
 
+  clearMap();
+
+  let loadingMapIcon = addLoadingMapIcon();
 
   // Perform a GET request to the query URL
   d3.json(queryUrl, function(data) {
@@ -541,21 +545,35 @@ function timePickerEventHandler(){
       console.log("muniStopsGeoJSONFiltered", muniStopsGeoJSONFiltered);
   
       // once this is called, the "createMap()" function will be executed
-      reCreateMap();
+      //reCreateMap();
+
+      myMap.removeLayer(loadingMapIcon);
+
+      createMap();
       // myAsyncCounter.increment();
   
   });
 
 }
 
+function addLoadingMapIcon(){
 
+  let icon_width = 450;
+  let icon_height = 100;
 
+  var loadingIcon = L.icon({
+    iconUrl: 'loading-icon.png',
 
+    iconSize:     [icon_width, icon_height], // size of the icon
+    iconAnchor:   [icon_width/2, icon_height/2], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+  });
 
+  return L.marker(myMap.getCenter(), {icon: loadingIcon}).addTo(myMap);
 
+}
 
-
-function reCreateMap(){
+function clearMap(){
 
   let centerPosition = myMap.getCenter();
   let zoomLevel = myMap.getZoom();
@@ -566,6 +584,13 @@ function reCreateMap(){
     center: centerPosition, // san francisco
     zoom: zoomLevel
   });
+
+}
+
+
+function reCreateMap(){
+
+  clearMap();
 
   createMap();
 

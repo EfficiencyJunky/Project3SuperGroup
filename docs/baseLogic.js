@@ -295,17 +295,21 @@ function createUIElements(myMap, baseMaps, overlayMaps){
 
     legend.onAdd = function (map) {
     
-        let div = L.DomUtil.create('div', 'info legend'),
-            grades = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0],
-            labels = [];
+        let div = L.DomUtil.create('div', 'info legend');
+        let grades = shameScoreInfoKeys.map((key) => {
+            return shameScoreInfo[key].score;
+        });
+        //let grades = [1.0, 2.0, 3.0, 4.0, 5.0]
     
         div.innerHTML += '<b>SHAME SCORE</b><br>';
   
         // loop through our density intervals and generate a label with a colored square for each interval
         for (let i = 0; i < grades.length; i++) {
             div.innerHTML +=
-                '<i style="background:' + getColorNormal(grades[i] + 1) + '"></i> ' +
-                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                '<i style="background:' + getColorNormal(grades[i]) + '"></i> ' +
+                // grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                shameScoreInfoKeys[i] + (grades[i + 1] ? '<br>' : '');
+
         }
         
         if(showSignificantColor === true){
