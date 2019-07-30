@@ -35,6 +35,8 @@ else{
 
 let APICallResponse = {};
 
+let loadingMapIcon = addLoadingMapIcon();
+
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
 // d3.json(normalEarthquakesQueryUrl, function(data) {
@@ -64,6 +66,7 @@ d3.json(queryUrl, function(data) {
     console.log("muniLinesGeoJSONFiltered", muniLinesGeoJSONFiltered.features);
     console.log("muniStopsGeoJSONFiltered", muniStopsGeoJSONFiltered);
 
+    myMap.removeLayer(loadingMapIcon);
     // once this is called, the "createMap()" function will be executed
     //createMap()
     myAsyncCounter.increment();

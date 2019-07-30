@@ -117,14 +117,16 @@ function createFeatures(munistopData, paneName) {
 
           let lineName =  line.line_ref;
           let minLate = line.scores.min_late;
-          let shameScore = line.scores.prediction_label;
+          let shameScoreKey = line.scores.prediction_label;
+          let fullPrognosis = shameScoreInfo[shameScoreKey].description;
 
           if(userSelectedMUNILineList.includes(lineName)){
             htmlBlock +=  "<hr>" +
             "<p>" + 
               "<b>Line: </b>" + lineName + "<br>" +
               "<b>Seconds Late: </b>" + minLate + "<br>" +
-              "<b>Shame Score: </b>" + shameScore +                          
+              "<b>Shame Score: </b>" + shameScoreKey + "<br>" +
+              "<b>Trip Prognosis: </b>" + fullPrognosis +                          
             "</p>";
 
           }
