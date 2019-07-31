@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Geo JSON</title>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"
+  integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+  crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
+  integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
+  crossorigin=""></script>
+
+  <!--D3 cdn-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+  <!-- bootstrsp -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <!-- Our CSS -->
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <!-- Navbar set up to link to other pages as well as provide a quick link to take straight to the charts -->
+
+  
+  
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="index.html">Muni Shame</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Map <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="project_desc.html">Project Description</a>
+              </li>
+            </ul>
+        <!-- </div>collapse navbar-collapse -->
+    </nav>
+    <div class="container-fluid" id="section">
+            <a name="slide0"></a>
+            <div class="row">
+                <div class="col-md-12 col-md-offset-1">
+                    <h1 class="header" id="section-header"></h1>
+                </div> 
+            </div>
+            <div class="row justify-content-center" style="margin-top: 35pt">
+                <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-right:20pt">
+                    <h4 style="padding-bottom:20pt">The Problem</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                </div>
+                <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-left:20pt">
+                        <h4 style="padding-bottom:20pt">Our Solution</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                    </div>
+                <div class="container text-center">
+                    <a id="next" href="#slide1">&#780;</a>
+                </div>
+            </div>
+        </div>
+    <div class="container-fluid" id="section">
+        <a name="slide1"></a>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-1">
+                <h1 class="header" id="section-header">Meet the Team</h1>
+            </div> 
+        </div>
+        <div class="row" style="margin-top: 35pt">
+            <div class="col-md-3" style="margin-top: 15pt;">
+                <span class="font-weight-bold" id="teamname">Matt Cooley</span>
+                <span id="teamrole">| Back End</span>
+                <p id="teamparagraph">The genius behind our data. Wrote a script to perform data pulls at regular intervals from the 511 site and packaged it up.</p>
+                <div class="text-center"><img src="Matt.png" class="img-center" style="max-width:60%"></div>
+            </div>
+            <div class="col-md-3" style="margin-top: 15pt;">
+                <span class="font-weight-bold" id="teamname">Laura Wensley</span>
+                <span id="teamrole">| Machine Learning</span>   
+                <p id="teamparagraph">Cleaned data, created a machine learning model and then pickled it up to incorporate in the backend.</p>
+            </div>
+            <div class="col-md-3" style="margin-top: 15pt;">
+                <span class="font-weight-bold" id="teamname">Turner Kirk</span>
+                <span id="teamrole">| Front End</span>       
+                <p id="teamparagraph">Responsible for creating our amazing map with all of its features along with getting the site linked up to Matt's data.</p>
+                <div class="text-center"><img src="Turner.jpeg" class="img-center" style="max-width:60%"></div>
+            </div>
+            <div class="col-md-3" style="margin-top: 15pt">
+                    <span class="font-weight-bold" id="teamname">Hilary Wall</span>
+                    <span id="teamrole">| The In Between</span> 
+                    <p id="teamparagraph">Everything else. Gathered muni stops/lines through next bus for use in front end, documentation/user stories, html support (like creating this page)</p>
+                    <div class="text-center"><img src="Hilary.JPG" class="img-center" style="max-width:60%"></div>
+            </div>
+        </div>
+        <div class="container text-center">
+            <a id="next" href="#slide2">&#780;</a>
+        </div>
+    </div>
+    <div class="container-fluid" id="section">
+        <a name="slide2"></a>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-1">
+                <h1 class="header" id="section-header">Back End</h1>
+            </div> 
+        </div>
+        <div class="row" style="margin-top: 35pt">
+            <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                <h4 class="section-body">Getting the Data</h4>
+                <ul style="margin-top: 15pt">
+                    <li>I did this really cool thing</li>
+                    <li>Then I did this other cool thing using this thing</li>
+                    <li>I didn't have any challenges, everything was super easy</li>
+                </ul>
+            </div>
+            <div class="container text-center">
+                <a id="next" href="#slide3">&#780;</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" id="section">
+            <a name="slide3"></a>
+            <div class="row">
+                <div class="col-md-12 col-md-offset-1">
+                    <h1 class="header" id="section-header">Machine Learning</h1>
+                </div> 
+            </div>
+            <div class="row" style="margin-top: 35pt">
+                <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                    <h4 class="section-body">Cleaning the data/Building the model</h4>
+                    <ul style="margin-top: 15pt">
+                        <li>I did this really cool thing</li>
+                        <li>Then I did this other cool thing using this thing</li>
+                        <li>I didn't have any challenges, everything was super easy</li>
+                        <li>Coding is always better with kittens</li>
+                    </ul>
+                </div>
+                <div class="container text-center">
+                    <a id="next" href="#slide4">&#780;</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" id="section">
+                <a name="slide4"></a>
+                <div class="row">
+                    <div class="col-md-12 col-md-offset-1">
+                        <h1 class="header" id="section-header">Front End</h1>
+                    </div> 
+                </div>
+                <div class="row" style="margin-top: 35pt">
+                    <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                        <h4 class="section-body">Building the Map</h4>
+                        <ul style="margin-top: 15pt">
+                            <li>I did this really cool thing</li>
+                            <li>Then I did this other cool thing using this thing</li>
+                            <li>I didn't have any challenges, everything was super easy</li>
+                            <li>Coding is always better with kittens</li>
+                        </ul>
+                    </div>
+                    <div class="container text-center">
+                        <a id="next" href="#slide5">&#780;</a>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" id="section">
+                    <a name="slide5"></a>
+                    <div class="row">
+                        <div class="col-md-12 col-md-offset-1">
+                            <h1 class="header" id="section-header">Next Steps</h1>
+                        </div> 
+                    </div>
+                    <div class="row" style="margin-top: 35pt">
+                        <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                            <h4 class="section-body">If we had more time and resources...</h4>
+                            <ul style="margin-top: 15pt">
+                                <li>Gather several weeks worth of data</li>
+                                <li>Be able to predict weekend vs weekday probability</li>
+                                <li>Add more lines</li>
+                            </ul>
+                        </div>
+                        <div class="container text-center">
+                            <a id="next" href="index.html">&#780;</a>
+                        </div>
+                    </div>
+                </div>
+</body>
+</html>
