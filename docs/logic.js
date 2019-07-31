@@ -102,9 +102,9 @@ function createFeatures(munistopData, paneName) {
       let lines = stopInfo[0].lines;
 
       layer.bindPopup(
-        "<h3>" + "Stop ID: " + stopId + "</h3>" +
-        "<h3>" + "Direction: " + direction + "</h3>" + 
-        "<h3>" + "Title: " + stopTitle + "</h3>" + 
+        "<h4>" + "Stop ID: " + stopId + "</h4>" +
+        "<h4>" + "Direction: " + direction + "</h4>" + 
+        "<h4>" + "Title: " + stopTitle + "</h4>" + 
         linesInfo(lines)
       );
 
@@ -117,16 +117,27 @@ function createFeatures(munistopData, paneName) {
 
           let lineName =  line.line_ref;
           let minLate = line.scores.min_late;
-          let shameScoreKey = line.scores.prediction_label;
-          let fullPrognosis = shameScoreInfo[shameScoreKey].description;
+          let shameScorePredictionLabel = line.scores.prediction_label;
+          let shameScoreDescription = shameScoreInfo[shameScorePredictionLabel].description;
+
+          // console.log("minstype", minLate);
+          // console.log("mintype", typeof(minLate));
+
+          if(typeof(minLate) == "number"){
+            minLate = parseFloat(minLate.toFixed(2));
+            // console.log("minslate", minLate);
+            minLate = hhmmss(minLate);
+            // console.log("minslate 2", minLate);
+            
+          }
 
           if(userSelectedMUNILineList.includes(lineName)){
             htmlBlock +=  "<hr>" +
             "<p>" + 
-              "<b>Line: </b>" + lineName + "<br>" +
-              "<b>Seconds Late: </b>" + minLate + "<br>" +
-              "<b>Shame Score: </b>" + shameScoreKey + "<br>" +
-              "<b>Trip Prognosis: </b>" + fullPrognosis +                          
+              "<big><b>Line: </b>" + lineName + "</big><br>" +
+              "<b>Current Shame Score: </b>" + shameScoreDescription + "<br>" +
+              "<b>Current Trip Prognosis: </b>There is a 50% chance that this bus will be " + shameScorePredictionLabel + "<br>" + "<br>" +
+              "<b>Historical average minutes late: </b>" + minLate +              
             "</p>";
 
           }
@@ -139,7 +150,7 @@ function createFeatures(munistopData, paneName) {
 
     } else {
       layer.bindPopup(
-        "<h3>" + "Stop ID: " + stopId + "</h3>" +
+        "<h4>" + "Stop ID: " + stopId + "</h4>" +
         "<hr>" +
         "<b>" + "Title: " + "</b>" + stopTitle + "</p>"
       );
@@ -324,6 +335,32 @@ function parseQueryTime(pickerValue){
   }
   
 }
+
+// seconds to minutes function
+function pad(num) {
+  return ("0"+num).slice(-2);
+}
+function hhmmss(secs) {
+
+  // need to deal with negative
+  let prefix = (secs < 0) ? "-" : "";
+  
+  secs = Math.floor(Math.abs(secs));
+  let minutes = Math.floor(secs / 60);
+  seconds = secs%60;
+  let hours = Math.floor(minutes/60)
+  minutes = minutes%60;
+  
+  if(secs <= 3600){
+    return prefix + `${pad(minutes)}:${pad(seconds)}`;
+  }
+  else{
+    return prefix + `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+  }
+
+  // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
+}
+
 
 
 /*

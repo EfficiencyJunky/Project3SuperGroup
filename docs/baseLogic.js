@@ -308,10 +308,12 @@ function createUIElements(myMap, baseMaps, overlayMaps){
   
         // loop through our density intervals and generate a label with a colored square for each interval
         for (let i = 0; i < grades.length; i++) {
+            let key = shameScoreInfoKeys[i];
+
             div.innerHTML +=
                 '<i style="background:' + getColorNormal(grades[i]) + '"></i> ' +
                 // grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-                shameScoreInfoKeys[i] + (grades[i + 1] ? '<br>' : '');
+                shameScoreInfo[key].short_description + (grades[i + 1] ? '<br>' : '');
 
         }
         
@@ -361,7 +363,7 @@ function createUIElements(myMap, baseMaps, overlayMaps){
         var div = L.DomUtil.create('div', 'info legend');
 
         // div.innerHTML = 'Time Picker<br><input type="text" class="form-control js-time-picker" value="02:56">';
-        div.innerHTML = 'Time Picker<br><input type="text" class="form-control js-time-picker" value="' + userSelectedTime + '">' ;
+        div.innerHTML = '<b>TIME PICKER</b><br><input type="text" class="form-control js-time-picker tpicker" value="' + userSelectedTime + '">' ;
         return div;
     };
 
