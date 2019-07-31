@@ -39,6 +39,25 @@ html {
   opacity: 0.7;
 }
 
+.botpad {
+  padding-bottom: 10px;
+}
+
+.shameScoreDot {
+  width: 16px;
+  height: 16px;
+  /* float: left; */
+  /* margin-top: 8px; */
+  /* padding-top: 10px; */
+  margin-right: 8px;
+  opacity: 0.7;
+  /* background-color: #bbb; */
+  border-radius: 50%;
+  /* color: black; */
+  border:1px solid black; 
+  display: inline-block;
+}
+
 /* additional CSS to fix Bootstrap causing issues */
 h4 {
   /* font-size: 10px; */

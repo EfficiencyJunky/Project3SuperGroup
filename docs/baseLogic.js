@@ -304,14 +304,15 @@ function createUIElements(myMap, baseMaps, overlayMaps){
         });
         //let grades = [1.0, 2.0, 3.0, 4.0, 5.0]
     
-        div.innerHTML += '<b>SHAME SCORE</b><br>';
+        div.innerHTML += '<span class="botpad"><b >SHAME SCORE</b><span><br>';
   
         // loop through our density intervals and generate a label with a colored square for each interval
         for (let i = 0; i < grades.length; i++) {
             let key = shameScoreInfoKeys[i];
 
             div.innerHTML +=
-                '<i style="background:' + getColorNormal(grades[i]) + '"></i> ' +
+                // '<i style="background:' + getColorNormal(grades[i]) + '"></i> ' +
+                '<span class="shameScoreDot" style="background:' + getColorNormal(grades[i]) + '"></span>' +
                 // grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
                 shameScoreInfo[key].short_description + (grades[i + 1] ? '<br>' : '');
 

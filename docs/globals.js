@@ -16,14 +16,14 @@ let shameScoreInfoKeys = Object.keys(shameScoreInfo);
 
 // DEFINE WHICH LINES WE WANT TO ADD TO THE MAP AND SOME METADATA FOR EACH OF THEM
 let MUNILinesInfo = {
-    "2":   {"long_name":"SUTTER/CLEMENT",       "vehicle": "bus",   "color": "red",       "has_rapid": false,   "has_express": 0,   "has_owl": false},
-    "7":   {"long_name":"HAIGHT-NORIEGA",       "vehicle": "bus",   "color": "purple",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
-    "14":  {"long_name":"MISSION",              "vehicle": "bus",   "color": "yellow",    "has_rapid": false,   "has_express": 1,   "has_owl": false},  
-    "38":  {"long_name":"GEARY",                "vehicle": "bus",   "color": "pink",      "has_rapid": true,    "has_express": 2,   "has_owl": false},     
-    "KT":  {"long_name":"INGLESIDE/THIRD",      "vehicle": "tram",   "color": "cyan",    "has_rapid": false,   "has_express": 0,   "has_owl": false},
+    "2":   {"long_name":"SUTTER/CLEMENT",       "vehicle": "bus",   "color": "rgba(144, 252, 249, 1)",       "has_rapid": false,   "has_express": 0,   "has_owl": false},
+    "7":   {"long_name":"HAIGHT-NORIEGA",       "vehicle": "bus",   "color": "rgba(62, 146, 204, 1)",      "has_rapid": false,   "has_express": 1,   "has_owl": false},
+    "14":  {"long_name":"MISSION",              "vehicle": "bus",   "color": "rgba(56, 145, 166, 1)",    "has_rapid": false,   "has_express": 1,   "has_owl": false},  
+    "38":  {"long_name":"GEARY",                "vehicle": "bus",   "color": "rgba(42, 98, 143, 1)",      "has_rapid": true,    "has_express": 2,   "has_owl": false},     
+    "KT":  {"long_name":"INGLESIDE/THIRD",      "vehicle": "tram",   "color": "rgba(218, 191, 255, 1)",    "has_rapid": false,   "has_express": 0,   "has_owl": false},
     "J":   {"long_name":"CHURCH",               "vehicle": "tram",   "color": "orange",    "has_rapid": false,   "has_express": 0,   "has_owl": false},  
-    "M":   {"long_name":"OCEANVIEW",            "vehicle": "tram",   "color": "green",     "has_rapid": false,   "has_express": 0,   "has_owl": true},
-    "N":   {"long_name":"JUDAH",                "vehicle": "tram",   "color": "blue",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
+    "M":   {"long_name":"OCEANVIEW",            "vehicle": "tram",   "color": "rgba(115, 113, 252, 1)",     "has_rapid": false,   "has_express": 0,   "has_owl": true},
+    "N":   {"long_name":"JUDAH",                "vehicle": "tram",   "color": "rgba(189, 64, 137, 1)",    "has_rapid": false,   "has_express": 1,   "has_owl": true}
 };
 
 // CREATE A LIST OF JUST THE MUNI LINE NUMBERS FROM THE KEYS OF THE 'MUNILinesInfo' OBJECT ABOVE
