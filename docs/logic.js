@@ -134,7 +134,7 @@ function createFeatures(munistopData, paneName) {
           if(userSelectedMUNILineList.includes(lineName)){
             htmlBlock +=  "<hr>" +
             "<p>" + 
-              "<big><b>Line: </b>" + lineName + "</big><br>" +
+              "<big><b>Line: </b>" + lineName + "</big><br><br>" +
               "<b>Current Shame Score: </b>" + shameScoreDescription + "<br>" +
               "<b>Current Trip Prognosis: </b>There is a 50% chance that this bus will be " + shameScorePredictionLabel + "<br>" + "<br>" +
               "<b>Historical average minutes late: </b>" + minLate +              
