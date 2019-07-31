@@ -1,11 +1,3 @@
-// inputs to the model
-// line
-// direction
-// stop
-// weekday
-// time
-
-
 /* ##################################################################################
    ****  EXECUTE API CALL, SETUP DEPENDENT VARIABLES AND CREATE INITIAL MAP STATE
 ##################################################################################### */
@@ -251,8 +243,8 @@ function createMap(){
     // Define the overlayMaps object to hold our overlay layers
     // *************************************************************
     let overlayMaps = {
-        MuniLines: muniLines,
-        MuniStops: muniStops
+        "Muni Lines": muniLines,
+        "Muni Stops": muniStops
     };
     
     // *************************************************************
@@ -260,12 +252,15 @@ function createMap(){
 
     // *************************************************************
     // tile layer
-    baseMaps["Street Map"].addTo(myMap);
+    baseMaps[selectedBaseMap].addTo(myMap);
 
     // muni data layers
-    overlayMaps.MuniLines.addTo(myMap);
-    overlayMaps.MuniStops.addTo(myMap);
-
+    if(muniLinesControlIsChecked){
+        overlayMaps["Muni Lines"].addTo(myMap);
+    }
+    if(muniStopsControlIsChecked){
+        overlayMaps["Muni Stops"].addTo(myMap);
+    }
 
     createUIElements(myMap, baseMaps, overlayMaps);
 }
@@ -284,11 +279,12 @@ function createUIElements(myMap, baseMaps, overlayMaps){
     //      Add the control layer to the map on bottom left
     // *************************************************************
 
-    L.control.layers(baseMaps, overlayMaps, {
+    let mapLayerControl = L.control.layers(baseMaps, overlayMaps, {
         collapsed: false,
         position: 'bottomleft'
     }).addTo(myMap);
 
+    console.log("layer control", mapLayerControl.getContainer());
 
     // *************************************************************
     //  ADD CONTROL ELEMENT TO ACT AS A LEGEND - Bottom right
@@ -394,4 +390,28 @@ function createEventHandlers(){
     d3.selectAll(".MuniLineCheckbox").on("change", updateMuniLineSelection);
     d3.selectAll(".MuniDirectionCheckbox").on("change", updateMuniDirectionSelection);
     d3.selectAll(".js-time-picker").on("change", timePickerEventHandler);
+    d3.selectAll(".leaflet-control-layers-selector").on("change", controlLayersClickHandler);
+}
+
+
+function controlLayersClickHandler(){
+
+    // controlLayerValue = this.value;
+    // controlLayerName = this.name;
+    controlLayerType = this.type;
+    controlLayerChecked = this.checked;
+    controlLayerElementText = this.parentNode.querySelector("span").textContent.trim();
+    
+    // console.log("control layer checked?", controlLayerChecked);
+    // console.log("control layer type", controlLayerType);
+    // console.log("control layer clicked", controlLayerElementText);
+
+    if(controlLayerType == "radio"){
+        selectedBaseMap = controlLayerElementText;
+    }
+    else if(controlLayerType == "checkbox"){
+        if(controlLayerElementText == "Muni Lines"){muniLinesControlIsChecked = controlLayerChecked;}
+        if(controlLayerElementText == "Muni Stops"){muniStopsControlIsChecked = controlLayerChecked;}
+    }
+
 }

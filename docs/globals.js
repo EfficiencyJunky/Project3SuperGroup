@@ -37,6 +37,7 @@ let userSelectedMUNILineList = originalMUNILineNamesList;
 let MUNIDirectionsList = ["Inbound", "Outbound"];
 let userSelectedDirectionsList = MUNIDirectionsList;
 
+let isNight = false;
 let userSelectedTime = getCurrentTime();
 
 // **************** GET THE DATE 7 DAYS AGO ******************
@@ -48,6 +49,12 @@ function getCurrentTime(){
   
   let time = HH + ':' + MM;
 
+  // console.log("hours", HH);
+
+  // if the current hour is between 8pm and 6am, set isNight to true
+  isNight = (HH < 6 || HH > 20);
+
+  // console.log("isnight", isNight);
   // console.log("time", time);
 
   return time;
@@ -97,6 +104,10 @@ let minimumZoom = 10;
 // boolean that tells the legend to add a divider that shows a different color for "significant delays"
 let showSignificantColor = false;
 
+let selectedBaseMap = isNight ? "Dark Map" : "Street Map";
+
+let muniLinesControlIsChecked = true;
+let muniStopsControlIsChecked = true;
 
 // Create our map using the div with id="map"
 let myMap = L.map("map", {
