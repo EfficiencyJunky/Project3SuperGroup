@@ -82,14 +82,15 @@ h4 {
   margin-top: 55pt
 }
 
-.section-body {
+/* .section-body {
   padding-top: 15pt
-}
+} */
 
 #next {
-  bottom: 10px;
-  /* justify-content: center;
-  align-content: flex-end; */
+  /* bottom: 10px; */
+  /* position: relative;
+  align-content: center;
+  text-align: center; */
   font-size: 115pt;
   color: rgb(32, 32, 32);
 }

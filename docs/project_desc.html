@@ -24,9 +24,6 @@
 
 <body>
   <!-- Navbar set up to link to other pages as well as provide a quick link to take straight to the charts -->
-
-  
-  
   <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="index.html">Muni Shame</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,59 +40,63 @@
             </ul>
         <!-- </div>collapse navbar-collapse -->
     </nav>
-    <div class="container-fluid" id="section">
-            <a name="slide0"></a>
-            <div class="row">
-                <div class="col-md-12 col-md-offset-1">
-                    <h1 class="header" id="section-header">Project Description</h1>
-                    <div style="padding-left: 20pt"><img src="Muni_Logo.png" class="img-center" style="max-width:10%"></div>
-                </div> 
+<!-- Opening Description Slide -->
+    <div class="container-fluid">
+        <a name="slide0"></a>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="header text-center" id="section-header">Project Overview</h1>
+            </div> 
+        </div>
+        <div class="row justify-content-center" style="margin-top: 55pt">
+            <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-right:20pt">
+                <h4 style="padding-bottom:20pt">The Problem</h4>
+                <p>Anyone who's had to rely on SF Muni as a means of transport has fallen victim to hopelessly late buses. As regular Muni users, we wanted to see if we could determine which stops on which lines were more likely to be late at varying times of day.</p>
             </div>
-            <div class="row justify-content-center" style="margin-top: 35pt">
-                <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-right:20pt">
-                    <h4 style="padding-bottom:20pt">The Problem</h4>
-                    <p>Anyone who's had to rely on SF Muni as a means of transport has fallen victim to hopelessly late buses. As regular Muni users, we wanted to see if we could determine which stops on which lines were more likely to be late at varying times of day.</p>
-                </div>
-                <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-left:20pt">
-                        <h4 style="padding-bottom:20pt">Our Solution</h4>
-                        <p>We pulled data from 511.org, including bus expected arrival vs actual arrival time every 10 minutes for a week. Using this data, we created a multi-label classification model to help us give a prediction score as to how likely it will be that a bus will be late at a particular time at a particular stop. With this information, a Muni user could decide to adjust their preferred stop or commuting schedule to a stop/time of day that was more reliable.</p>
-                    </div>
-                <div class="container text-center">
-                    <a id="next" href="#slide1">&#780;</a>
-                </div>
+            <div class="col-md-5" style="margin-top: 15pt; margin-bottom: 20pt; padding-left:20pt">
+                <h4 style="padding-bottom:20pt">Our Solution</h4>
+                <p>We pulled data from 511.org, including bus expected arrival vs actual arrival time every 10 minutes for a week. Using this data, we created a multi-label classification model to help us give a prediction score as to how likely it will be that a bus will be late at a particular time at a particular stop. With this information, a Muni user could decide to adjust their preferred stop or commuting schedule to a stop/time of day that was more reliable.</p>
+                <!-- <div style="padding-left: 20pt"><img src="Muni_Logo.png" class="img-center" style="max-width:10%"></div> -->
             </div>
         </div>
+            <div class="container text-center">
+                <a class="button" id="next" href="#slide1">&#780;</a>
+            </div>
+     </div>
     <div class="container-fluid" id="section">
         <a name="slide1"></a>
         <div class="row">
-            <div class="col-md-12 col-md-offset-1">
-                <h1 class="header" id="section-header">Meet the Team</h1>
+            <div class="col-md-12">
+                <h1 class="header text-center" id="section-header">Meet the Team</h1>
             </div> 
         </div>
-        <div class="row" style="margin-top: 35pt">
-            <div class="col-md-3" style="margin-top: 15pt;">
+        <div class="row justify-content-center" style="margin-top: 35pt">
+            <div class="col-md-2"><img src="Matt.png" class="img-center" style="max-width:100%"></div>
+            <div class="col-md-3">
                 <span class="font-weight-bold" id="teamname">Matt Cooley</span>
                 <span id="teamrole">| Back End</span>                
                 <p id="teamparagraph">The genius behind our data. Wrote a script to perform data pulls at regular intervals from the 511 site and packaged it up. Pickled Laura's model.</p>
-                <div class="text-center"><img src="Matt.png" class="img-center" style="max-width:60%"></div>
+                
             </div>
-            <div class="col-md-3" style="margin-top: 15pt;">
+            <div class="col-md-2"><img src="Laura.jpg" class="img-center" style="max-width:100%"></div>
+            <div class="col-md-3">
                 <span class="font-weight-bold" id="teamname">Laura Wensley</span>
                 <span id="teamrole">| Machine Learning</span>   
                 <p id="teamparagraph">Cleaned data, created a machine learning model and performed some data analysis through tableau.</p>
-                <div class="text-center"><img src="Laura.jpg" class="img-center" style="max-width:60%"></div>
             </div>
+        </div>
+        <div class="row justify-content-center" style="margin-top: 35pt">
+            <div class="col-md-2"><img src="Turner.jpeg" class="img-center" style="max-width:100%"></div>
             <div class="col-md-3" style="margin-top: 15pt;">
                 <span class="font-weight-bold" id="teamname">Turner Kirk</span>
                 <span id="teamrole">| Front End</span>       
                 <p id="teamparagraph">Responsible for creating our amazing map with all of its features along with sending the API call based on time chosen to Matt's back end.</p>
-                <div class="text-center"><img src="Turner.jpeg" class="img-center" style="max-width:60%"></div>
             </div>
+            <div class="col-md-2"><img src="Hilary.JPG" class="img-center" style="max-width:100%"></div>
             <div class="col-md-3" style="margin-top: 15pt">
                     <span class="font-weight-bold" id="teamname">Hilary Wall</span>
                     <span id="teamrole">| The In Between</span> 
                     <p id="teamparagraph">Everything else. Gathered muni stops/lines through next bus for use in front end, documentation/user stories, html support (like creating this page)</p>
-                    <div class="text-center"><img src="Hilary.JPG" class="img-center" style="max-width:60%"></div>
             </div>
         </div>
         <div class="container text-center">
@@ -172,46 +173,59 @@
             </div>
         </div>
     </div>
+    <!-- Turner's Section -->
     <div class="container-fluid" id="section">
-                <a name="slide4"></a>
-                <div class="row">
-                    <div class="col-md-12 col-md-offset-1">
-                        <h1 class="header" id="section-header">Front End</h1>
-                    </div> 
-                </div>
-                <div class="row" style="margin-top: 35pt; padding-left:20pt">
-                    <div class="col-md-7 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
-                        <h4 class="section-body">Building the Map</h4>
-                        <ul style="margin-top: 15pt">
-                            <li>What: Leaflet.js, D3</li>
-                            <li>How: leaflet.js was used for the mapping. We used D3 for the API call, UI Event Handling as well as an extra TimePicker  js library from a good sumaritan on github. To get refreshed data, the site makes a simple API call with the user selected time of day as a parameter in the URL.</li>
-                            <li>Challenges: It was challenging to read the leaflet.js developer docs! This site is currently deleting and re-creating the entire map anytime someone toggles any of the UI because we couldn't figure out how to use layers correctly.</li>
-                        </ul>
-                    </div>
-                    <div class="d-flex align-content-end flex-wrap">
-                        <a id="next" href="#slide5">&#780;</a>
-                    </div>
-                </div>
+        <a name="slide4"></a>
+        <div class="row">
+                <div class="col-md-12">
+                    <h1 class="header text-center" id="section-header">Creating the Front End</h1>
+                </div> 
+        </div>
+        <div class="row justify-content-center" style="margin-top: 35pt; margin-right:10pt; margin-left:10pt">
+            <div class="col-md-6">
+                <h6>Tools Used</h6>
+                <ul>
+                    <li>Leaflet.js, D3, GeoJSONs from Transitland</li>
+                    <li>Leaflet.js: used for the mapping</li>
+                    <li>GeoJSONs from TransitLand: used to place stop markers and muni lines</li> 
+                    <li>D3: D3 for the API call, UI Event Handling as well as an extra TimePicker js library from a good sumaritan on github.</li> 
+                </ul>
+                <h6>How it works:</h6>
+                <span>To get refreshed data, the site makes a simple API call with the user selected time of day as a parameter in the URL. 
+                    Once the data has been retrieved, the map is built, checkboxes laid out based on what Muni Lines were included in the API response, 
+                    markers placed in Muni Stop locations and color set based on the shame score for each stop. the popups bound to each marker show all 
+                    the relevant information for each muni line stopping at each stop. In the case that multiple muni lines stop at a single Muni Stop, the 
+                    worst shame score is used as the color for that marker.</span>
+                <h6 style="padding-top:15pt">Challenges:</h6>
+                <span>It was challenging to read the leaflet.js developer docs! This site is currently deleting and re-creating the entire map 
+                    anytime someone toggles any of the UI because we couldn't figure out how to use layers correctly (and didn't have time to fool around with 
+                    all them silly docs!)</span>
             </div>
-            <div class="container-fluid" id="section">
-                    <a name="slide5"></a>
-                    <!-- <div class="row"> -->
-                        <!-- <div class="col-md-12 col-md-offset-1">
-                            <h1 class="header" id="section-header">Next Steps</h1>
-                        </div>  -->
-                    <!-- </div> -->
-                    <div class="row">
-                        <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
-                            <h4 class="section-body">An Exploration of the Data</h4>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="text-center"><img src="Data_Charts.png" class="img-center" style="max-width:45%"></div>
-                        </div>
-                        <div class="container text-center">
-                            <a id="next" href="#slide6">&#780;</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <div class="text-center"><img src="Diagram.jpeg" class="img-center" style="max-width:100%"></div>
+            </div>
+        
+            <!-- <div class="d-flex align-content-end flex-wrap"> -->
+                <a id="next" href="#slide5">&#780;</a>
+
+            </div>
+    </div>
+    <!-- Laura's Section pt 2 - Data Slide -->
+    <div class="container-fluid" id="section">
+        <a name="slide5"></a>
+        <div class="row">
+            <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                <h4 class="section-body">An Quick Look at the Data</h4>
+            </div>
+            <div class="col-md-12">
+                <div class="text-center"><img src="Data_Charts.png" class="img-center" style="max-width:45%"></div>
+            </div>
+            <div class="container text-center">
+                <a id="next" href="#slide6">&#780;</a>
+            </div>
+        </div>
+    </div>
+
                 <div class="container-fluid" id="section">
                         <a name="slide6"></a>
                         <div class="row">
