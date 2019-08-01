@@ -14,10 +14,13 @@
 
   <!--D3 cdn-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
-  <!-- bootstrsp -->
+  <!-- bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  
   <!-- Our CSS -->
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -60,9 +63,10 @@
             </div>
         </div>
             <div class="container text-center">
-                <a class="button" id="next" href="#slide1">&#780;</a>
+                <a id="next" href="#slide1">&#9663</a>
             </div>
-     </div>
+    </div>
+<!-- Team Introduction -->
     <div class="container-fluid" id="section">
         <a name="slide1"></a>
         <div class="row">
@@ -100,18 +104,19 @@
             </div>
         </div>
         <div class="container text-center">
-            <a id="next" href="#slide2">&#780;</a>
+            <a id="next" href="#slide2">&#9663</a>
         </div>
     </div>
+    <!-- Matt's Section -->
     <div class="container-fluid" id="section">
         <a name="slide2"></a>
         <div class="row">
-            <div class="col-md-12 col-md-offset-1">
-                <h1 class="header" id="section-header">Back End</h1>
+            <div class="col-md-12">
+                <h1 class="header text-center" id="section-header">Back End</h1>
             </div> 
         </div>
-        <div class="row" style="margin-top: 35pt; margin-left:20pt">
-            <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+        <div class="row justify-content-center">
+            <div class="col-md-8" style="margin-top: 15pt; margin-bottom: 20pt">
                 <h4 class="section-body">Getting the Data</h4>
                 <ul style="margin-top: 15pt">
                     <li>Where: Data was pulled from <a href="https://511.org/developers/list/apis/">511.org</a></li>
@@ -133,10 +138,11 @@
                 </ul>
             </div>
         </div>
-        <div>
-            <a id="next" href="#slide3">&#780;</a>
+        <div class="container text-center">
+            <a id="next" href="#slide3">&#9663</a>
         </div>
     </div>
+    <!-- Laura's Section -->
     <div class="container-fluid" id="section">
         <a name="slide3"></a>
         <div class="row">
@@ -181,19 +187,37 @@
                 <span style="font-size: 10pt"><a href="http://playground.tensorflow.org/#activation=tanh&batchSize=24&dataset=xor&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=30&networkShape=4,2,2,2&seed=0.28518&showTestData=false&discretize=false&percTrainData=60&x=false&y=false&xTimesY=false&xSquared=false&ySquared=true&cosX=false&sinX=false&cosY=false&sinY=true&collectStats=false&problem=classification&initZero=false&hideText=false">Read more here!</a></span>
             </div>
             <div class="container text-center">
-                <a id="next" href="#slide4">&#780;</a>
+                <a id="next" href="#slide4">&#9663</a>
             </div>
         </div>
     </div>
+    <!-- Laura's Section pt 2 - Data Slide -->
+    <div class="container-fluid" id="section">
+            <a name="slide4"></a>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="header text-center" id="section-header">An Quick Look at the Data</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="text-center"><img src="Data_Charts.png" class="img-center" style="max-width:100%"></div>
+                </div>
+                <div class="container text-center">
+                    <a id="next" href="#slide5">&#9663</a>
+                </div>
+            </div>
+            </div>
+        </div>
     <!-- Turner's Section -->
     <div class="container-fluid" id="section">
-        <a name="slide4"></a>
+        <a name="slide5"></a>
         <div class="row">
                 <div class="col-md-12">
                     <h1 class="header text-center" id="section-header">Creating the Front End</h1>
                 </div> 
         </div>
-        <div class="row justify-content-center" style="margin-top: 35pt; margin-right:10pt; margin-left:10pt">
+        <div class="row justify-content-center" style="margin-top: 20pt; margin-right:10pt; margin-left:10pt">
             <div class="col-md-6">
                 <h6>Tools Used</h6>
                 <ul>
@@ -216,48 +240,32 @@
             <div class="col-md-6">
                 <div class="text-center"><img src="Diagram.jpeg" class="img-center" style="max-width:100%"></div>
             </div>
-        
-            <!-- <div class="d-flex align-content-end flex-wrap"> -->
-                <a id="next" href="#slide5">&#780;</a>
-
+            <div class="container text-center">
+                <a id="next" href="#slide6">&#9663</a>
             </div>
     </div>
-    <!-- Laura's Section pt 2 - Data Slide -->
+<!-- Next Steps -->
     <div class="container-fluid" id="section">
-        <a name="slide5"></a>
-        <div class="row">
-            <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
-                <h4 class="section-body">An Quick Look at the Data</h4>
+            <a name="slide6"></a>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="header text-center" id="section-header">Next Steps</h1>
+                </div> 
             </div>
-            <div class="col-md-12">
-                <div class="text-center"><img src="Data_Charts.png" class="img-center" style="max-width:45%"></div>
+            <div class="row justify-content-center" style="margin-top: 35pt">
+                <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
+                    <h4 class="section-body">If we had more time and resources...</h4>
+                    <ul style="margin-top: 15pt">
+                        <li>Gather several weeks worth of data</li>
+                        <li>Be able to predict weekend vs weekday probability</li>
+                        <li>Add more lines</li>
+                    </ul>
+                </div>
+
             </div>
             <div class="container text-center">
-                <a id="next" href="#slide6">&#780;</a>
-            </div>
+                    <a id="next" href="index.html">&#9663</a>
+                </div>
         </div>
-    </div>
-
-                <div class="container-fluid" id="section">
-                        <a name="slide6"></a>
-                        <div class="row">
-                            <div class="col-md-12 col-md-offset-1">
-                                <h1 class="header" id="section-header">Next Steps</h1>
-                            </div> 
-                        </div>
-                        <div class="row" style="margin-top: 35pt">
-                            <div class="col-md-8 align-self-center" style="margin-top: 15pt; margin-bottom: 20pt">
-                                <h4 class="section-body">If we had more time and resources...</h4>
-                                <ul style="margin-top: 15pt">
-                                    <li>Gather several weeks worth of data</li>
-                                    <li>Be able to predict weekend vs weekday probability</li>
-                                    <li>Add more lines</li>
-                                </ul>
-                            </div>
-                            <div class="container text-center">
-                                <a id="next" href="index.html">&#780;</a>
-                            </div>
-                        </div>
-                    </div>
 </body>
 </html>
