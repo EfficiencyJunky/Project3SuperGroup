@@ -52,7 +52,7 @@ function getCurrentTime(){
   // console.log("hours", HH);
 
   // if the current hour is between 8pm and 6am, set isNight to true
-  isNight = (HH < 6 || HH > 20);
+  isNight = (HH <= 6 || HH >= 20);
 
   // console.log("isnight", isNight);
   // console.log("time", time);
