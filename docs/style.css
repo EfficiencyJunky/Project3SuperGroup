@@ -88,9 +88,9 @@ h4 {
 
 #next {
   bottom: 10px;
+  /* justify-content: center;
+  align-content: flex-end; */
   font-size: 115pt;
-  
-  padding-right: 12pt;
   color: rgb(32, 32, 32);
 }
 
